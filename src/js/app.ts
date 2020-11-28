@@ -1,3 +1,2 @@
-import '../scss/main.scss';
-
 alert('ddd')
+alert('fdds')
