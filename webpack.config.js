@@ -9,7 +9,11 @@ module.exports = {
         path: path.resolve(__dirname, "./dist")
     },
     plugins: [ //odpalamy odpowiednie pluginy
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: path.resolve(__dirname, 'build'),
+            ignoreOrder: false,
+        }),
         new HtmlWebpackPlugin({
             title: 'zliczka',
             template: path.resolve(__dirname, './src/templates/index.html'),
@@ -43,16 +47,10 @@ module.exports = {
             {
                 test: /\.s[ac]ss$/i,
                 use: [
-                    'style-loader',
+                    { loader: MiniCssExtractPlugin.loader },
                     'css-loader',
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            implementation: require('sass'), //Wolimy dart-sass niż node-sass
-                        },
-                    },
-                    'postcss-loader',
-                ],
+                    'sass-loader',
+                ]
             },
             {
                 test: /\.(png|jpe?g|gif|webp|awif|svg)$/i,
