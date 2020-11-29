@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://zliczka/./src/scss/colors.scss"],"names":[],"mappings":"AAOA,KACI,qB","file":"main.css","sourcesContent":["$primary-color:#0089E5;\r\n$secondary-color:#004E80;\r\n$grey:#b2b2b2;\r\n$primary-text:#000000;\r\n$white:#f3f3f3;\r\n$third-color :rgb(46, 238, 7);\r\n\r\n.app{\r\n    background-color: red;\r\n}"],"sourceRoot":""}

@@ -21,18 +21,21 @@ module.exports = {
             chunks: ['zliczka'],
         })
     ],
+    resolve: {
+        extensions: ['.ts', '.js', '.tsx',]
+    },
     watch: false,
     mode: "development",
     devtool: "source-map",
     module: {
         rules: [
             {
-                test: /\.m?js$/,
+                test: /\.js|\.ts$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/preset-env", "@babel/preset-typescript"]
+                        presets: ["@babel/preset-typescript"]
                     }
                 }
             },

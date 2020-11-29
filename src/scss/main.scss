@@ -1,3 +1,6 @@
+@import './colors.scss';
+// @import './tailwind.css';
+
 .all{
-    background-color: red;
+    background-color: $grey;
 }
