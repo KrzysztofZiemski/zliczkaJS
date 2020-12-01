@@ -8,6 +8,9 @@ module.exports = {
         filename: "bundle.min.js",
         path: path.resolve(__dirname, "./dist")
     },
+    devServer: {
+
+    },
     plugins: [ //odpalamy odpowiednie pluginy
         new MiniCssExtractPlugin({
             filename: '[name].css',
@@ -44,7 +47,19 @@ module.exports = {
                 use: [
                     'style-loader',
                     'css-loader',
-                    'postcss-loader',
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: {
+                                plugins: [
+                                    [
+                                        require('tailwindcss'),
+                                        require('autoprefixer')
+                                    ],
+                                ],
+                            },
+                        },
+                    },
                 ],
             },
             {

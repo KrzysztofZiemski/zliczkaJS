@@ -6,102 +6,92 @@
     <title>Document</title>
     <link rel="stylesheet" href="main.css">
 </head>
-<body class='app'>
-    <div class="group inline-block">
-        <button
-          class="outline-none focus:outline-none border px-3 py-1 bg-white rounded-sm flex items-center min-w-32"
-        >
-          <span class="pr-1 font-semibold flex-1">Dropdown</span>
-          <span>
-            <svg
-              class="fill-current h-4 w-4 transform group-hover:-rotate-180
-              transition duration-150 ease-in-out"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-              />
-            </svg>
-          </span>
-        </button>
-        <ul
-          class="bg-white border rounded-sm transform scale-0 group-hover:scale-100 absolute 
-        transition duration-150 ease-in-out origin-top min-w-32"
-        >
-          <li class="rounded-sm px-3 py-1 hover:bg-gray-100">Programming</li>
-          <li class="rounded-sm px-3 py-1 hover:bg-gray-100">DevOps</li>
-          <li class="rounded-sm relative px-3 py-1 hover:bg-gray-100">
-            <button
-              class="w-full text-left flex items-center outline-none focus:outline-none"
-            >
-              <span class="pr-1 flex-1">Langauges</span>
-              <span class="mr-auto">
-                <svg
-                  class="fill-current h-4 w-4
-                  transition duration-150 ease-in-out"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                  />
-                </svg>
-              </span>
-            </button>
-            <ul
-              class="bg-white border rounded-sm absolute top-0 right-0 
-        transition duration-150 ease-in-out origin-top-left
-        min-w-32
-        "
-            >
-              <li class="px-3 py-1 hover:bg-gray-100">Javascript</li>
-              <li class="rounded-sm relative px-3 py-1 hover:bg-gray-100">
-                <button
-                  class="w-full text-left flex items-center outline-none focus:outline-none"
-                >
-                  <span class="pr-1 flex-1">Python</span>
-                  <span class="mr-auto">
-                    <svg
-                      class="fill-current h-4 w-4
-                      transition duration-150 ease-in-out"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                      />
-                    </svg>
-                  </span>
-                </button>
-                <ul
-                  class="bg-white border rounded-sm absolute top-0 right-0 
-            transition duration-150 ease-in-out origin-top-left
-            min-w-32
-            "
-                >
-                  <li class="px-3 py-1 hover:bg-gray-100">2.7</li>
-                  <li class="px-3 py-1 hover:bg-gray-100">3+</li>
-                </ul>
-              </li>
-              <li class="px-3 py-1 hover:bg-gray-100">Go</li>
-              <li class="px-3 py-1 hover:bg-gray-100">Rust</li>
-            </ul>
-          </li>
-          <li class="rounded-sm px-3 py-1 hover:bg-gray-100">Testing</li>
-        </ul>
+<body bg-gray-400>
+  <div id="app" class="flex flex-col min-h-screen">
+
+    <!-- nav start -->
+    <nav class="bg-blue-600 p-4 flex flex-row justify-between">
+          <!-- title -->
+          <h1 class="self-start	">Zliczka</h1>
+          <!-- title end-->
+          <!-- userpanel -->
+          <div class="mr-8 flex justify-between items-center flex-row" id="user-panel"><span id="user-name" class="mr-4">Stefan</span><svg class="h-8" viewBox="-42 0 512 512.002" xmlns="http://www.w3.org/2000/svg"><path d="m210.351562 246.632812c33.882813 0 63.222657-12.152343 87.195313-36.128906 23.972656-23.972656 36.125-53.304687 36.125-87.191406 0-33.875-12.152344-63.210938-36.128906-87.191406-23.976563-23.96875-53.3125-36.121094-87.191407-36.121094-33.886718 0-63.21875 12.152344-87.191406 36.125s-36.128906 53.308594-36.128906 87.1875c0 33.886719 12.15625 63.222656 36.132812 87.195312 23.976563 23.96875 53.3125 36.125 87.1875 36.125zm0 0"/><path d="m426.128906 393.703125c-.691406-9.976563-2.089844-20.859375-4.148437-32.351563-2.078125-11.578124-4.753907-22.523437-7.957031-32.527343-3.308594-10.339844-7.808594-20.550781-13.371094-30.335938-5.773438-10.15625-12.554688-19-20.164063-26.277343-7.957031-7.613282-17.699219-13.734376-28.964843-18.199219-11.226563-4.441407-23.667969-6.691407-36.976563-6.691407-5.226563 0-10.28125 2.144532-20.042969 8.5-6.007812 3.917969-13.035156 8.449219-20.878906 13.460938-6.707031 4.273438-15.792969 8.277344-27.015625 11.902344-10.949219 3.542968-22.066406 5.339844-33.039063 5.339844-10.972656 0-22.085937-1.796876-33.046874-5.339844-11.210938-3.621094-20.296876-7.625-26.996094-11.898438-7.769532-4.964844-14.800782-9.496094-20.898438-13.46875-9.75-6.355468-14.808594-8.5-20.035156-8.5-13.3125 0-25.75 2.253906-36.972656 6.699219-11.257813 4.457031-21.003906 10.578125-28.96875 18.199219-7.605469 7.28125-14.390625 16.121094-20.15625 26.273437-5.558594 9.785157-10.058594 19.992188-13.371094 30.339844-3.199219 10.003906-5.875 20.945313-7.953125 32.523437-2.058594 11.476563-3.457031 22.363282-4.148437 32.363282-.679688 9.796875-1.023438 19.964844-1.023438 30.234375 0 26.726562 8.496094 48.363281 25.25 64.320312 16.546875 15.746094 38.441406 23.734375 65.066406 23.734375h246.53125c26.625 0 48.511719-7.984375 65.0625-23.734375 16.757813-15.945312 25.253906-37.585937 25.253906-64.324219-.003906-10.316406-.351562-20.492187-1.035156-30.242187zm0 0"/></svg></div>
+          <!-- userpanel -->
+    </nav>
+    <!-- nav end -->
+
+    <!-- panel constainer -->
+    <section class="flex flex-row min-h-300 bg-gray-200">
+
+      <!-- time and task -->
+      <div class="flex flex-col justify-around">
+        <!-- time -->
+        <div class="m-5 w-96 flex flex-col bg-blue-700 p-6 pt-2 rounded-lg">
+          <label for="date-panel" class="mb-4 text-white">Podaj Dzień</label>
+          <input type="date" id='date-panel' class="p-3 mb-3 w-full">
+          <button class="primmary-btn">Przejdź</button>
+        </div>
+         <!-- time end-->
+
+          <!-- select task -->
+        <div class="m-5 w-96 flex flex-col bg-blue-700 p-6 pt-2 rounded-lg">
+          <label for="task-label" class="mb-4 text-white">Podaj Dzień</label>
+          <select name="selectTasks" id="selectTasks" class="p-3 mb-3 w-full"></select>
+          <button class="primmary-btn">DODAJ</button>
+        </div>
+         <!-- select task end -->
       </div>
-      <style>
-        li>ul                 { transform: translatex(100%) scale(0) }
-        li:hover>ul           { transform: translatex(101%) scale(1) }
-        li > button svg       { transform: rotate(-90deg) }
-        li:hover > button svg { transform: rotate(-270deg) }
-      
-        .group:hover .group-hover\:scale-100 { transform: scale(1) }
-        .group:hover .group-hover\:-rotate-180 { transform: rotate(180deg) }
-        .scale-0 { transform: scale(0) }
-        .min-w-32 { min-width: 8rem }
-      </style>
+        <!-- time and task end-->
+        <div id='fawourite-tasks' class="bg-white flex-grow ">
+          <h1 class=" bg-gray-200 p-2">Najczęściej wybierane</h1>
+          <ul >
+            <li class="flex items-center shadow-lg">
+              <button class="m-3 mr-6 shadow-lg "><svg class="w-9 fill-current text-green-600" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"/><path d="m368 277.332031h-90.667969v90.667969c0 11.777344-9.554687 21.332031-21.332031 21.332031s-21.332031-9.554687-21.332031-21.332031v-90.667969h-90.667969c-11.777344 0-21.332031-9.554687-21.332031-21.332031s9.554687-21.332031 21.332031-21.332031h90.667969v-90.667969c0-11.777344 9.554687-21.332031 21.332031-21.332031s21.332031 9.554687 21.332031 21.332031v90.667969h90.667969c11.777344 0 21.332031 9.554687 21.332031 21.332031s-9.554687 21.332031-21.332031 21.332031zm0 0" fill="#FBBF24" /></svg></button>
+              <span>Lorem, ipsum dolobero accusantium fugit! Corporis.</span>
+           </li>
+           <li class="flex items-center shadow-lg">
+            <button class="m-3 mr-6 shadow-lg "><svg class="w-9 fill-current text-green-600" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"/><path d="m368 277.332031h-90.667969v90.667969c0 11.777344-9.554687 21.332031-21.332031 21.332031s-21.332031-9.554687-21.332031-21.332031v-90.667969h-90.667969c-11.777344 0-21.332031-9.554687-21.332031-21.332031s9.554687-21.332031 21.332031-21.332031h90.667969v-90.667969c0-11.777344 9.554687-21.332031 21.332031-21.332031s21.332031 9.554687 21.332031 21.332031v90.667969h90.667969c11.777344 0 21.332031 9.554687 21.332031 21.332031s-9.554687 21.332031-21.332031 21.332031zm0 0" fill="#FBBF24" /></svg></button>
+            <span>Lorem, ipsum dolobero accusantium fugit! Corporis.</span>
+         </li>
+
+          </ul>
+        </div>
+    </section>
+      <!-- panel constainer end-->
+      <!-- dashboard -->
+    <section class="flex-grow w-full bg-gray-200">
+        <!-- title -->
+        <h1 class="p-6 bg-blue-600">Zadania</h1>
+        <!-- title end-->
+        <!-- table added tasks -->
+          <table class="w-full p-8">
+            <tbody>
+              <tr class="bg-gray-400">
+                <th class="p-4">Zadanie:</th>
+                <th>Ilość:</th>
+                <th>Czas:</th>
+              </tr>
+              <tr class="bg-gray-300 m-4">
+                <td class="p-4 ">asd</td>
+                <td  class="text-center"><input class="text-center w-14" type="number"></td>
+                <td  class="text-center"><input class="text-center w-14" type="number"></td>
+              </tr>
+              <tr class="bg-gray-200 m-4">
+                <td class="p-4 ">asd</td>
+                <td  class="text-center"><input class="text-center w-14" type="number"></td>
+                <td  class="text-center"><input class="text-center w-14" type="number"></td>
+              </tr>
+              <tr class="bg-gray-300 m-4">
+                <td class="p-4 ">asd</td>
+                <td  class="text-center"><input class="text-center w-14" type="number"></td>
+                <td  class="text-center"><input class="text-center w-14" type="number"></td>
+              </tr>
+            </tbody>
+          </table>
+         <!-- table added tasks end-->
+    </section>
+       <!-- dashboard end-->
+  </div>
 <script src="bundle.min.js"></script>
 </body>
 </html>
