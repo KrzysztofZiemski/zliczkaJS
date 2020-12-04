@@ -77,6 +77,8 @@ export class RenderTasksElements {
   getTypes(tasksArr: Array<TaskInterface>) {
     const types: Object = {};
     const ouptut = [];
+    if (!Array.isArray(tasksArr)) return;
+
     tasksArr.forEach((el) => {
       types[el.type] = "";
     });
@@ -86,6 +88,8 @@ export class RenderTasksElements {
     return ouptut;
   }
   addOptions(tasksArr: Array<TaskInterface>) {
+    if (!Array.isArray(tasksArr)) return;
+
     const types = this.getTypes(tasksArr);
 
     types.forEach((type) => {

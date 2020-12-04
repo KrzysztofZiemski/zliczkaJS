@@ -1,7 +1,7 @@
 import "../tailwind/tailwind.css";
 
 import "../scss/main.scss";
-import { TasksApi, RenderTasksElements } from "./tasks";
+import { TasksApi, RenderTasksElements, TaskInterface } from "./tasks";
 import {
   Reports,
   RenderReportsElements,
@@ -9,6 +9,7 @@ import {
   TYPE_FIELD_REPORT,
 } from "./reports";
 import { DateHandler } from "./dateHandler";
+import { FavouriteTasks } from "./favouriteTasks";
 
 class App {
   tasks: TasksApi;
@@ -16,11 +17,11 @@ class App {
   dateHandler: DateHandler;
   report: Reports;
   dashboard: HTMLTableElement;
-
+  favouriteTasks: FavouriteTasks;
   constructor() {
     this.tasks = new TasksApi();
     this.report = new Reports();
-
+    this.favouriteTasks = new FavouriteTasks();
     this.taskElementCreator = new RenderTasksElements(
       document.querySelector("#selectTasks")
     );
@@ -47,14 +48,24 @@ class App {
       .addEventListener("submit", this.addTaskToReport.bind(this));
 
     this.dashboard.addEventListener("change", this.changeDashboard.bind(this));
+
     document
       .querySelector("#save-report")
       .addEventListener("click", this.saveReport.bind(this));
+
+    window.onbeforeunload = function () {
+      return "Czy na pewno chcesz wyjść ze strony? Sprawdź czy zmiany są zapisane";
+    };
   }
-  saveReport() {
+  warningExitPage(e: Event) {
+    return "są niezapisane zmiany";
+  }
+
+  async saveReport() {
     const ok: boolean = window.confirm("Czy wysłać raport?");
     if (ok) {
-      this.report.save();
+      await this.report.save();
+      this.renderDashboard();
     }
   }
 
@@ -66,12 +77,14 @@ class App {
     //ONE OF TYPE_FIELD_REPORT
     const type: string = e.target.dataset.type;
     this.report.change(id, value, type);
+    this.renderDashboard();
   }
 
   renderDashboard() {
     new RenderReportsElements(this.dashboard).render(
       this.report.getAll(),
-      this.report.getData()
+      this.report.getData(),
+      this.report.isSaved()
     );
   }
   getNewRaport(e: Event) {
@@ -82,7 +95,10 @@ class App {
   addTaskToReport(e: Event) {
     e.preventDefault();
     const idTask = Number(this.taskElementCreator.getContainer().value);
-    const { id, name, isParameterized } = this.tasks.get(idTask);
+    const addedTask: TaskInterface = this.tasks.get(idTask);
+    const { id, name, isParameterized } = addedTask;
+    this.favouriteTasks.add(addedTask);
+    console.log(this.favouriteTasks.getTop());
     this.report.add(id, name, isParameterized);
     this.renderDashboard();
   }

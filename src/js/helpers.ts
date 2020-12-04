@@ -8,3 +8,6 @@ export const getStringData = (date: Date, reverse: boolean = false) => {
   if (reverse) return `${getDate}-${month}-${day}`;
   return `${day}-${month}-${getDate}`;
 };
+
+export const setDateFormat = (date: Date): Date =>
+  new Date(date.toJSON().slice(0, 10).replace(/-/g, "/"));

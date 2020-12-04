@@ -1,6 +1,7 @@
 import { SERVER } from "./consts";
 import { getStringData } from "./helpers";
 import { Loader } from "./loader";
+import { Message } from "./message";
 
 const requestParam: RequestInit = {
   // credentials: "include",
@@ -37,6 +38,7 @@ export class Reports {
   private fetched: boolean;
   private report: ReportInterface;
   private saved: boolean;
+  private isLoading: boolean;
 
   constructor() {
     this.url = `${SERVER}/reports`;
@@ -44,6 +46,11 @@ export class Reports {
 
   async fetch(date: Date): Promise<void> {
     this.date = date;
+    const loader = new Loader();
+    this.isLoading = true;
+    setTimeout(() => {
+      if (this.isLoading) loader.setShow();
+    }, 500);
     try {
       const response = await fetch(`${this.url}/${date.getTime()}`);
 
@@ -51,25 +58,45 @@ export class Reports {
         this.fetched = true;
         const report: ReportInterface = await response.json();
         this.report = report;
+        this.saved = true;
       } else {
         throw new Error(
           `Error connection getting tasks status ${response.status}`
         );
       }
+      this.isLoading = false;
+      loader.setHide();
     } catch (e) {
+      this.isLoading = false;
+      loader.setHide();
+
+      new Message().set(
+        "Błąd podczas pobierania zadań - spróbuj za chwilę",
+        `Błąd ${e.message}`
+      );
       //handle error response
     }
   }
+
+  isSaved(): boolean {
+    return this.saved;
+  }
+
   async save(): Promise<Response> {
     const options = {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify(this.report),
     };
+
     const loader = new Loader();
 
-    loader.setShow();
+    this.isLoading = true;
+    setTimeout(() => {
+      if (this.isLoading) loader.setShow();
+    }, 200);
+
     try {
-      const response = await fetch(this.url, {
+      const response = await fetch(`${this.url}/${this.report.idReport}`, {
         ...requestParam,
         ...options,
       });
@@ -79,11 +106,17 @@ export class Reports {
       } else {
         throw new Error(`${response.status}`);
       }
+      this.isLoading = false;
       loader.setHide();
 
       return response;
     } catch (e) {
+      this.isLoading = false;
       loader.setHide();
+      new Message().set(
+        "Błąd podczas pobierania zadań - spróbuj za chwilę",
+        `Błąd ${e.message}`
+      );
       //handle error
     }
   }
@@ -128,6 +161,7 @@ export class Reports {
     }
   }
   getAll() {
+    if (!this.report) return;
     return this.report.tasks;
   }
 
@@ -148,9 +182,12 @@ export class RenderReportsElements {
   constructor(table: HTMLTableElement) {
     this.container = table;
   }
-  private createCaption(date: Date) {
+  private createCaption(date: Date, isSaved: boolean) {
     const caption: HTMLTableCaptionElement = document.createElement("caption");
-    caption.setAttribute("class", "p-2 bg-blue-600 text-2xl");
+    caption.setAttribute(
+      "class",
+      `p-2 ${isSaved ? "bg-green-600" : "bg-blue-600"} text-2xl`
+    );
     caption.innerText = `Zadania z dnia ${getStringData(date)}`;
     this.container.append(caption);
   }
@@ -189,7 +226,10 @@ export class RenderReportsElements {
   }
 
   private createBody(reports: Array<TaskReportInterface>) {
+    if (!Array.isArray(reports)) return;
+
     const tbody: HTMLElement = document.createElement("tbody");
+
     reports.forEach(({ name, count, time, id }, index) => {
       //create tr
       const tr = document.createElement("tr");
@@ -230,9 +270,23 @@ export class RenderReportsElements {
     });
     this.container.append(tbody);
   }
-  public render(reports: Array<TaskReportInterface>, date: Date) {
+  setTable(isSaved) {
     this.container.innerHTML = null;
-    this.createCaption(date);
+    if (isSaved) {
+      this.container.classList.remove("border-blue-600");
+      this.container.classList.add("border-green-600");
+    } else {
+      this.container.classList.remove("border-green-600");
+      this.container.classList.add("border-blue-600");
+    }
+  }
+  public render(
+    reports: Array<TaskReportInterface>,
+    date: Date,
+    isSaved: boolean
+  ) {
+    this.setTable(isSaved);
+    this.createCaption(date, isSaved);
     this.createThead();
     this.createBody(reports);
   }
