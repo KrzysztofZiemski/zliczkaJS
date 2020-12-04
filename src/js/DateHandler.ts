@@ -1,0 +1,24 @@
+import { getStringData } from "./helpers";
+
+export class DateHandler {
+  date: Date;
+  inputDate: HTMLInputElement;
+
+  constructor(inputDate: HTMLInputElement) {
+    this.inputDate = inputDate;
+    this.init();
+  }
+  init(): void {
+    this.date = new Date();
+
+    this.inputDate.value = getStringData(this.date, true);
+    this.inputDate.addEventListener("change", this.change.bind(this));
+  }
+
+  getDate(): Date {
+    return this.date;
+  }
+  change(e: Event): void {
+    this.date = new Date(e.target.value);
+  }
+}
