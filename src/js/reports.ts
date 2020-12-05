@@ -32,12 +32,12 @@ export interface ReportInterface {
   tasks: Array<TaskReportInterface>;
 }
 
+let report: ReportInterface;
+let fetched: boolean;
+let saved: boolean;
+
 export class Reports {
   private url: string;
-  private date: Date;
-  private fetched: boolean;
-  private report: ReportInterface;
-  private saved: boolean;
   private isLoading: boolean;
 
   constructor() {
@@ -45,7 +45,6 @@ export class Reports {
   }
 
   async fetch(date: Date): Promise<void> {
-    this.date = date;
     const loader = new Loader();
     this.isLoading = true;
     setTimeout(() => {
@@ -55,10 +54,10 @@ export class Reports {
       const response = await fetch(`${this.url}/${date.getTime()}`);
 
       if (response.ok) {
-        this.fetched = true;
-        const report: ReportInterface = await response.json();
-        this.report = report;
-        this.saved = true;
+        fetched = true;
+        const fetchedReport: ReportInterface = await response.json();
+        report = fetchedReport;
+        saved = true;
       } else {
         throw new Error(
           `Error connection getting tasks status ${response.status}`
@@ -79,13 +78,13 @@ export class Reports {
   }
 
   isSaved(): boolean {
-    return this.saved;
+    return saved;
   }
 
   async save(): Promise<Response> {
     const options = {
       method: "PUT",
-      body: JSON.stringify(this.report),
+      body: JSON.stringify(report),
     };
 
     const loader = new Loader();
@@ -96,13 +95,13 @@ export class Reports {
     }, 200);
 
     try {
-      const response = await fetch(`${this.url}/${this.report.idReport}`, {
+      const response = await fetch(`${this.url}/${report.idReport}`, {
         ...requestParam,
         ...options,
       });
 
       if (response.ok) {
-        this.saved = true;
+        saved = true;
       } else {
         throw new Error(`${response.status}`);
       }
@@ -122,7 +121,7 @@ export class Reports {
   }
 
   add(id: number, name: string, isParameterized: boolean): void {
-    this.saved = false;
+    saved = false;
     const doubledItem: TaskReportInterface | undefined = this.get(id);
 
     if (doubledItem !== undefined) {
@@ -132,28 +131,27 @@ export class Reports {
       isParameterized
         ? (newItem = { id, name, isParameterized, count: 1 })
         : { id, name, isParameterized, count: 1, time: 0 };
-      this.report.tasks.push(newItem);
+      report.tasks.push(newItem);
     }
   }
   remove(id: number) {
-    this.saved = false;
-    this.report.tasks = this.report.tasks.filter((el) => el.id !== id);
+    saved = false;
+    report.tasks = report.tasks.filter((el) => el.id !== id);
   }
 
-  updateCount(id: number, value: number) {
-    this.saved = false;
+  private updateCount(id: number, value: number) {
     this.get(id).count = value;
   }
 
-  updateTime(id: number, value: number) {
-    this.saved = false;
+  private updateTime(id: number, value: number) {
     this.get(id).time = value;
   }
 
   get(id: number): TaskReportInterface {
-    return this.report.tasks.find((el) => el.id === id);
+    return report.tasks.find((el) => el.id === id);
   }
   change(id: number, value: number, type: string) {
+    saved = false;
     if (type === TYPE_FIELD_REPORT.COUNT) {
       this.updateCount(id, value);
     } else if (TYPE_FIELD_REPORT.TIME) {
@@ -161,16 +159,16 @@ export class Reports {
     }
   }
   getAll() {
-    if (!this.report) return;
-    return this.report.tasks;
+    if (!report) return;
+    return report.tasks;
   }
 
   getData() {
-    return this.date;
+    return new Date(report.date);
   }
 
   getDescription(): string {
-    return this.report.description;
+    return report.description;
   }
 }
 
@@ -179,8 +177,11 @@ const headers: Array<string> = ["zadanie", "ilość", "czas"];
 export class RenderReportsElements {
   container: HTMLElement;
 
-  constructor(table: HTMLTableElement) {
-    this.container = table;
+  constructor() {
+    this.container = document.querySelector("#dashboard");
+  }
+  getContainer(): HTMLElement {
+    return this.container;
   }
   private createCaption(date: Date, isSaved: boolean) {
     const caption: HTMLTableCaptionElement = document.createElement("caption");
@@ -280,11 +281,13 @@ export class RenderReportsElements {
       this.container.classList.add("border-blue-600");
     }
   }
-  public render(
-    reports: Array<TaskReportInterface>,
-    date: Date,
-    isSaved: boolean
-  ) {
+  public render() {
+    const reportApi = new Reports();
+
+    const reports: Array<TaskReportInterface> = reportApi.getAll();
+    const date: Date = reportApi.getData();
+    const isSaved: boolean = reportApi.isSaved();
+
     this.setTable(isSaved);
     this.createCaption(date, isSaved);
     this.createThead();

@@ -17,15 +17,15 @@ export interface TaskInterface {
   type: string;
   isParameterized: boolean;
 }
+let tasks: Array<TaskInterface>;
+let fetched: boolean;
 
 export class TasksApi {
   private url: string;
-  private tasks: Array<TaskInterface>;
-  private fetched: boolean;
 
   constructor() {
     this.url = `${SERVER}/tasks`;
-    this.fetched = false;
+    fetched = false;
   }
 
   async fetch(): Promise<void> {
@@ -35,9 +35,9 @@ export class TasksApi {
       const tasksResponse = await fetch(this.url, requestParam);
       loader.setHide();
       if (tasksResponse.ok) {
-        const tasks: Array<TaskInterface> = await tasksResponse.json();
-        this.fetched = true;
-        this.tasks = tasks;
+        const fetchedTasks: Array<TaskInterface> = await tasksResponse.json();
+        fetched = true;
+        tasks = fetchedTasks;
       } else {
         throw new Error(
           `Error connection getting tasks status ${tasksResponse.status}`
@@ -49,10 +49,10 @@ export class TasksApi {
     }
   }
   getAll(): Array<TaskInterface> {
-    return this.tasks;
+    return tasks;
   }
   get(id: number): TaskInterface {
-    return this.tasks.find((task) => task.id === id);
+    return tasks.find((task) => task.id === id);
   }
 }
 
@@ -87,6 +87,7 @@ export class RenderTasksElements {
     }
     return ouptut;
   }
+
   addOptions(tasksArr: Array<TaskInterface>) {
     if (!Array.isArray(tasksArr)) return;
 

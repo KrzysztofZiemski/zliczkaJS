@@ -16,7 +16,6 @@ class App {
   taskElementCreator: RenderTasksElements;
   dateHandler: DateHandler;
   report: Reports;
-  dashboard: HTMLTableElement;
   favouriteTasks: FavouriteTasks;
   constructor() {
     this.tasks = new TasksApi();
@@ -26,15 +25,16 @@ class App {
       document.querySelector("#selectTasks")
     );
     this.dateHandler = new DateHandler(document.querySelector("#date-panel"));
-    this.dashboard = document.querySelector("#dashboard");
-
     this.init();
   }
   async init() {
     await this.tasks.fetch();
     await this.report.fetch(this.dateHandler.getDate());
     this.taskElementCreator.addOptions(this.tasks.getAll());
-    this.renderDashboard();
+    this.favouriteTasks.render();
+
+    if (this.tasks.getAll().length > 0) this.renderDashboard();
+
     this.addListeners();
   }
 
@@ -47,7 +47,9 @@ class App {
       .querySelector("#taskForm")
       .addEventListener("submit", this.addTaskToReport.bind(this));
 
-    this.dashboard.addEventListener("change", this.changeDashboard.bind(this));
+    document
+      .querySelector("#dashboard")
+      .addEventListener("change", this.changeDashboard.bind(this));
 
     document
       .querySelector("#save-report")
@@ -57,6 +59,7 @@ class App {
       return "Czy na pewno chcesz wyjść ze strony? Sprawdź czy zmiany są zapisane";
     };
   }
+
   warningExitPage(e: Event) {
     return "są niezapisane zmiany";
   }
@@ -81,11 +84,7 @@ class App {
   }
 
   renderDashboard() {
-    new RenderReportsElements(this.dashboard).render(
-      this.report.getAll(),
-      this.report.getData(),
-      this.report.isSaved()
-    );
+    new RenderReportsElements().render();
   }
   getNewRaport(e: Event) {
     e.preventDefault();
