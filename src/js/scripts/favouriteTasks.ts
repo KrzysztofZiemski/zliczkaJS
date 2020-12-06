@@ -4,7 +4,8 @@ import { Reports, RenderReportsElements } from "./reports";
 
 // const plusIcon = require("../assets/plus.svg") as string;
 // @ts-ignore: Unreachable code error
-import img from "../assets/plusImg.png";
+import img from "../../assets/plusImg.png";
+
 interface FavouriteTaskInterface extends TaskInterface {
   count: number;
 }
@@ -67,7 +68,7 @@ export class FavouriteTasks {
     const { id, name, isParameterized }: TaskInterface = new TasksApi().get(
       idFavouritedTask
     );
-    
+
     button.addEventListener("click", () => {
       new Reports().add(id, name, isParameterized);
       new RenderReportsElements().render();

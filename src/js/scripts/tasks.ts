@@ -1,4 +1,4 @@
-import { SERVER } from "./consts";
+import { SERVER } from "../consts";
 import { Loader } from "./loader";
 
 const requestParam: RequestInit = {
@@ -53,9 +53,7 @@ export class TasksApi {
     return tasks;
   }
   get(id: number): TaskInterface | undefined {
-    const searchingTask:TaskInterface = tasks.find((task) => task.id === id);
-    if(searchingTask) return searchingTask
-    return {}
+    return tasks.find((task) => task.id === id);
   }
 }
 

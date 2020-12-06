@@ -1,4 +1,4 @@
-import { SERVER } from "./consts";
+import { SERVER } from "../consts";
 import { getStringData } from "./helpers";
 import { Loader } from "./loader";
 import { Message } from "./message";

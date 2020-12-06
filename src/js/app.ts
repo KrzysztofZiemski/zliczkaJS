@@ -1,14 +1,14 @@
-import '../style/tailwind/tailwind.css';
+import "../style/tailwind.css";
 
-import { TasksApi, RenderTasksElements, TaskInterface } from "./tasks";
+import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
 import {
   Reports,
   RenderReportsElements,
   ReportInterface,
   TYPE_FIELD_REPORT,
-} from "./reports";
-import { DateHandler } from "./dateHandler";
-import { FavouriteTasks } from "./favouriteTasks";
+} from "./scripts/reports";
+import { DateHandler } from "./scripts/dateHandler";
+import { FavouriteTasks } from "./scripts/favouriteTasks";
 
 class App {
   tasks: TasksApi;
