@@ -1,6 +1,5 @@
-import "../tailwind/tailwind.css";
+import '../style/tailwind/tailwind.css';
 
-import "../scss/main.scss";
 import { TasksApi, RenderTasksElements, TaskInterface } from "./tasks";
 import {
   Reports,

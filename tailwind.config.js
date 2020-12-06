@@ -5,6 +5,7 @@ module.exports = {
     content: [
       './src/**/*.js',
       './src/**/*.ts',
+      './src/**/*.html',
       './node_modules/flatpickr/**/*.js',
     ],
   },

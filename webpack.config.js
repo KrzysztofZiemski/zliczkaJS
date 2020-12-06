@@ -16,30 +16,11 @@ module.exports = {
         compress: true,
         publicPath: '/',
     },
-    plugins: [ //odpalamy odpowiednie pluginy
-        new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: path.resolve(__dirname, 'build'),
-            ignoreOrder: false,
-        }),
-        new HtmlWebpackPlugin({
-            title: 'zliczka',
-            template: path.resolve(__dirname, './src/templates/index.html'),
-            filename: 'index.html',
-            chunks: ['zliczka'],
-        }),
-        new HtmlWebpackPlugin({
-            title: 'zliczka login',
-            template: path.resolve(__dirname, './src/templates/login.html'),
-            filename: 'login.html',
-            chunks: ['login'],
-        })
-    ],
     resolve: {
         extensions: ['.ts', '.js', '.tsx',]
     },
     watch: false,
-    mode: "development",
+    mode: "production",
     devtool: "source-map",
     module: {
         rules: [
@@ -56,31 +37,9 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                        loader: "postcss-loader",
-                        options: {
-                            postcssOptions: {
-                                plugins: [
-                                    [
-                                        require('tailwindcss'),
-                                        require('autoprefixer')
-                                    ],
-                                ],
-                            },
-                        },
-                    },
+                    MiniCssExtractPlugin.loader,
+                    "css-loader", "postcss-loader",
                 ],
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    { loader: MiniCssExtractPlugin.loader },
-                    'css-loader',
-                    "postcss-loader",
-                    'sass-loader',
-                ]
             },
             {
                 test: /\.(png|jpe?g|gif|webp|awif|svg)$/i,
@@ -97,5 +56,24 @@ module.exports = {
             },
         ]
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'style.css',
+            // chunkFilename: path.resolve(__dirname, 'build'),
+            chunkFilename: "styles.css",
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka',
+            template: path.resolve(__dirname, './src/templates/index.html'),
+            filename: 'index.html',
+            chunks: ['zliczka'],
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka login',
+            template: path.resolve(__dirname, './src/templates/login.html'),
+            filename: 'login.html',
+            chunks: ['login'],
+        })
+    ],
 
 }
