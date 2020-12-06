@@ -2,13 +2,12 @@
   "name": "zliczka",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "start": "webpack serve",
-    "server":"nodemon D:/Users/Krzyś/Desktop/ziemski/zliczkaBackend/index.js"
+    "server": "nodemon D:/Users/Krzyś/Desktop/ziemski/zliczkaBackend/index.js"
   },
   "author": "Krzysztof Ziemski <k.b.ziemski@gmail.com>",
   "license": "UNLICENSED",

@@ -130,7 +130,8 @@ export class Reports {
       let newItem: TaskReportInterface;
       isParameterized
         ? (newItem = { id, name, isParameterized, count: 1 })
-        : { id, name, isParameterized, count: 1, time: 0 };
+        : (newItem = { id, name, isParameterized, count: 1, time: 0 });
+
       report.tasks.push(newItem);
     }
   }
@@ -285,6 +286,7 @@ export class RenderReportsElements {
     const reportApi = new Reports();
 
     const reports: Array<TaskReportInterface> = reportApi.getAll();
+
     const date: Date = reportApi.getData();
     const isSaved: boolean = reportApi.isSaved();
 

@@ -17,7 +17,7 @@ export interface TaskInterface {
   type: string;
   isParameterized: boolean;
 }
-let tasks: Array<TaskInterface>;
+let tasks: Array<TaskInterface> = [];
 let fetched: boolean;
 
 export class TasksApi {
@@ -43,6 +43,7 @@ export class TasksApi {
           `Error connection getting tasks status ${tasksResponse.status}`
         );
       }
+      console.log(tasks);
     } catch (e) {
       loader.setHide();
       //handle error
@@ -51,8 +52,10 @@ export class TasksApi {
   getAll(): Array<TaskInterface> {
     return tasks;
   }
-  get(id: number): TaskInterface {
-    return tasks.find((task) => task.id === id);
+  get(id: number): TaskInterface | undefined {
+    const searchingTask:TaskInterface = tasks.find((task) => task.id === id);
+    if(searchingTask) return searchingTask
+    return {}
   }
 }
 

@@ -3,13 +3,18 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require("path");
 
 module.exports = {
-    entry: "./src/js/app.ts",
+    entry: {
+        app: "./src/js/app.ts",
+        login: "./src/js/login.ts",
+    },
     output: {
-        filename: "bundle.min.js",
+        filename: "[name].min.js",
         path: path.resolve(__dirname, "./dist")
     },
     devServer: {
-
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        publicPath: '/',
     },
     plugins: [ //odpalamy odpowiednie pluginy
         new MiniCssExtractPlugin({
@@ -22,6 +27,12 @@ module.exports = {
             template: path.resolve(__dirname, './src/templates/index.html'),
             filename: 'index.html',
             chunks: ['zliczka'],
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka login',
+            template: path.resolve(__dirname, './src/templates/login.html'),
+            filename: 'login.html',
+            chunks: ['login'],
         })
     ],
     resolve: {
@@ -67,6 +78,7 @@ module.exports = {
                 use: [
                     { loader: MiniCssExtractPlugin.loader },
                     'css-loader',
+                    "postcss-loader",
                     'sass-loader',
                 ]
             },
@@ -75,10 +87,10 @@ module.exports = {
                 use: [
                     {
                         loader: 'file-loader',
-                        options: { //grafiki chcemy w katalogu dist/images
+                        options: {
                             context: 'public',
-                            name: '/images/[name]-[hash].[ext]',
-                            publicPath: '/',
+                            name: 'images/[name]-[hash].[ext]',
+                            publicPath: "",
                         },
                     },
                 ],

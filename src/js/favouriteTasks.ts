@@ -2,8 +2,9 @@ const FAVOURITE_TASK = "FAVOURITE_TASK";
 import { TaskInterface, TasksApi } from "./tasks";
 import { Reports, RenderReportsElements } from "./reports";
 
-const plusIcon = require("../assets/plus.svg") as string;
-
+// const plusIcon = require("../assets/plus.svg") as string;
+// @ts-ignore: Unreachable code error
+import img from "../assets/plusImg.png";
 interface FavouriteTaskInterface extends TaskInterface {
   count: number;
 }
@@ -62,16 +63,19 @@ export class FavouriteTasks {
   createButton(idFavouritedTask: number) {
     const button: HTMLButtonElement = document.createElement("button");
     button.setAttribute("class", "m-3 mr-6 shadow-lg");
+
     const { id, name, isParameterized }: TaskInterface = new TasksApi().get(
       idFavouritedTask
     );
+    
     button.addEventListener("click", () => {
       new Reports().add(id, name, isParameterized);
       new RenderReportsElements().render();
     });
 
     const imgElement: HTMLImageElement = document.createElement("img");
-    imgElement.setAttribute("src", plusIcon);
+    imgElement.setAttribute("src", `${img}`);
+    // imgElement.setAttribute("src", img);
     imgElement.setAttribute("class", "w-9 fill-current "); //text-green-600 will works for imf not svg?
 
     button.append(imgElement);
