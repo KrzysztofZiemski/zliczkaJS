@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const path = require("path");
 
 module.exports = {
@@ -35,7 +36,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.css$/i,
+                test: /\.css/i,
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader", "postcss-loader",
@@ -75,5 +76,12 @@ module.exports = {
             chunks: ['login'],
         })
     ],
-
+    optimization: {
+        minimize: true,
+        minimizer: [
+            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+            // `...`
+            new CssMinimizerPlugin(),
+        ],
+    },
 }

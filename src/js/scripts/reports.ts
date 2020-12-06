@@ -73,7 +73,6 @@ export class Reports {
         "Błąd podczas pobierania zadań - spróbuj za chwilę",
         `Błąd ${e.message}`
       );
-      //handle error response
     }
   }
 
@@ -116,7 +115,7 @@ export class Reports {
         "Błąd podczas pobierania zadań - spróbuj za chwilę",
         `Błąd ${e.message}`
       );
-      //handle error
+ 
     }
   }
 

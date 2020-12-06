@@ -1,8 +1,6 @@
 const FAVOURITE_TASK = "FAVOURITE_TASK";
 import { TaskInterface, TasksApi } from "./tasks";
 import { Reports, RenderReportsElements } from "./reports";
-
-// const plusIcon = require("../assets/plus.svg") as string;
 // @ts-ignore: Unreachable code error
 import img from "../../assets/plusImg.png";
 
@@ -76,8 +74,7 @@ export class FavouriteTasks {
 
     const imgElement: HTMLImageElement = document.createElement("img");
     imgElement.setAttribute("src", `${img}`);
-    // imgElement.setAttribute("src", img);
-    imgElement.setAttribute("class", "w-9 fill-current "); //text-green-600 will works for imf not svg?
+    imgElement.setAttribute("class", "w-9 fill-current ");
 
     button.append(imgElement);
     return button;
