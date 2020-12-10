@@ -20,7 +20,9 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js', '.tsx',]
     },
-    watch: false,
+    watchOptions: {
+        ignored: ['node_modules/**']
+    },
     mode: "production",
     devtool: "source-map",
     module: {

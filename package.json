@@ -8,7 +8,7 @@
     "build": "webpack --mode=production",
     "start": "webpack serve",
     "server": "nodemon D:/Users/Krzyś/Desktop/ziemski/zliczkaBackend/index.js",
-    "buildTest": "export NODE_ENV=production && webpack --mode production"
+    "watch": "webpack --watch --progress"
   },
   "author": "Krzysztof Ziemski <k.b.ziemski@gmail.com>",
   "license": "UNLICENSED",
