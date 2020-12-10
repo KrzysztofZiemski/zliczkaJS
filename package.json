@@ -7,7 +7,7 @@
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode=production",
     "start": "webpack serve",
-    "server": "nodemon D:/Users/Krzyś/Desktop/ziemski/zliczkaBackend/index.js",
+    "server": "nodemon backend/app.js",
     "watch": "webpack --watch --progress"
   },
   "author": "Krzysztof Ziemski <k.b.ziemski@gmail.com>",
@@ -36,5 +36,15 @@
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.6"
+  }
 }

@@ -3,3 +3,5 @@ dist
 changes.txt
 # Local Netlify folder
 .netlify
+backend/config.json
+package-lock.json
