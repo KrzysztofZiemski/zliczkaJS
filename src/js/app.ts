@@ -1,4 +1,4 @@
-// import "../style/tailwind.css";
+import "../style/tailwind.css";
 //tymc\zsowo wyłączyłem style
 import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
 import {

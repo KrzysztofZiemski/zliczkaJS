@@ -81,7 +81,7 @@ export class FavouriteTasks {
   }
 
   getTop(): Array<FavouriteTaskInterface> {
-    return this.getAll().sort(sortProvider).slice(0, 2);
+    return this.getAll().sort(sortProvider).slice(0, 6);
   }
   createTextElement(text: string) {
     const span: HTMLSpanElement = document.createElement("span");
@@ -98,7 +98,8 @@ export class FavouriteTasks {
   }
 
   render() {
-    const favouriteTasks = this.getAll();
+    const favouriteTasks = this.getTop();
+
     const liElements: Array<HTMLLIElement> = favouriteTasks.map(
       (favouriteTask) => this.createTask(favouriteTask)
     );

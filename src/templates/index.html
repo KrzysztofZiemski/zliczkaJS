@@ -9,7 +9,7 @@
   <body bg-gray-400>
     <div id="app" class="flex flex-col min-h-screen">
       <!-- nav start -->
-      <nav class="bg-blue-600 p-4 flex flex-row justify-between">
+      <nav class="bg-blue-500 p-4 flex flex-row justify-between">
         <!-- title -->
         <h1 class="self-start">Zliczka</h1>
         <!-- title end-->
@@ -39,38 +39,61 @@
       <!-- panel constainer -->
       <section class="flex flex-row min-h-300 bg-gray-200">
         <!-- time and task -->
-        <div class="flex flex-col justify-around">
+        <div>
           <!-- time -->
-          <div class="m-5 w-96 flex flex-col bg-blue-700 p-6 pt-2 rounded-lg">
-            <form id="dateForm">
-              <label for="date-panel" class="mb-4 text-white"
+          <div class="m-5 w-96 rounded-lg">
+            <form id="dateForm" class="bg-blue-900 rounded-lg flex flex-col">
+              <label
+                for="date-panel"
+                class="p-5 pl-5 text-white block bg-blue-500 rounded-t-lg uppercase spacing-5 font-bold"
                 >Podaj Dzień</label
               >
-              <input type="date" id="date-panel" class="p-3 mb-3 w-full" />
-              <button class="primmary-btn" type="submit">Przejdź</button>
+              <input
+                type="date"
+                id="date-panel"
+                class="p-3 mt-4 mb-4 ml-5 w-4/5"
+              />
+              <button
+                class="primmary-btn w-11/12 self-center mb-4"
+                type="submit"
+              >
+                Przejdź
+              </button>
             </form>
           </div>
           <!-- time end-->
 
           <!-- select task -->
-          <div class="m-5 w-96 flex flex-col bg-blue-700 p-6 pt-2 rounded-lg">
-            <form action="" id="taskForm">
-              <label for="task-label" class="mb-4 text-white"
+          <div class="m-5 w-96 rounded-lg">
+            <form
+              action=""
+              id="taskForm"
+              class="bg-blue-900 rounded-lg flex flex-col"
+            >
+              <label
+                for="task-label"
+                class="p-5 pl-5 text-white block bg-blue-500 rounded-t-lg uppercase spacing-5 font-bold"
                 >Wybierz zadanie</label
               >
               <select
                 name="selectTasks"
                 id="selectTasks"
-                class="p-3 mb-3 w-full"
+                class="p-3 mt-4 mb-4 ml-5 w-4/5"
               ></select>
-              <button class="primmary-btn">DODAJ</button>
+              <button class="primmary-btn w-11/12 self-center mb-4">
+                DODAJ
+              </button>
             </form>
           </div>
           <!-- select task end -->
         </div>
         <!-- time and task end-->
-        <div id="favourite-tasks" class="bg-white flex-grow">
-          <h1 class="bg-gray-200 p-2">Najczęściej wybierane</h1>
+        <div id="favourite-tasks" class="m-5 bg-white flex-grow rounded-t-lg">
+          <h1
+            class="p-5 pl-5 text-white block bg-blue-500 rounded-t-lg uppercase spacing-5 font-bold"
+          >
+            Najczęściej wybierane
+          </h1>
         </div>
       </section>
       <!-- panel constainer end-->
@@ -79,8 +102,15 @@
         class="flex-grow w-full bg-gray-200 flex justify-center flex-col"
       >
         <!-- table added tasks -->
-        <table class="border-16" id="dashboard"></table>
-        <button class="primmary-btn mt-2" type="button" id="save-report">
+        <table
+          class="border-16 w-11/12 self-center rounded-t-lg"
+          id="dashboard"
+        ></table>
+        <button
+          class="primmary-btn mt-2 w-11/12 self-center"
+          type="button"
+          id="save-report"
+        >
           ZAPISZ RAPORT
         </button>
         <!-- table added tasks end-->

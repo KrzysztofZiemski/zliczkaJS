@@ -6,9 +6,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode=production",
-    "start": "webpack serve",
+    "devServer": "webpack serve",
     "server": "nodemon backend/app.js",
-    "watch": "webpack --watch --progress"
+    "watch": "webpack --watch --progress",
+    "start": "node backend/app.js",
+    "heroku-postbuild": "webpack --mode=production"
   },
   "author": "Krzysztof Ziemski <k.b.ziemski@gmail.com>",
   "license": "UNLICENSED",

@@ -115,7 +115,6 @@ export class Reports {
         "Błąd podczas pobierania zadań - spróbuj za chwilę",
         `Błąd ${e.message}`
       );
- 
     }
   }
 
@@ -187,7 +186,7 @@ export class RenderReportsElements {
     const caption: HTMLTableCaptionElement = document.createElement("caption");
     caption.setAttribute(
       "class",
-      `p-2 ${isSaved ? "bg-green-600" : "bg-blue-600"} text-2xl`
+      `p-3 w-full rounded-t-lg bg-blue-500 rounded-t-lg font-bold`
     );
     caption.innerText = `Zadania z dnia ${getStringData(date)}`;
     this.container.append(caption);
@@ -274,11 +273,11 @@ export class RenderReportsElements {
   setTable(isSaved) {
     this.container.innerHTML = null;
     if (isSaved) {
-      this.container.classList.remove("border-blue-600");
-      this.container.classList.add("border-green-600");
+      this.container.classList.remove("border-blue-900");
+      this.container.classList.add("border-blue-500");
     } else {
-      this.container.classList.remove("border-green-600");
-      this.container.classList.add("border-blue-600");
+      this.container.classList.remove("border-blue-500");
+      this.container.classList.add("border-blue-900");
     }
   }
   public render() {
