@@ -1,5 +1,5 @@
 
-const SERVER = "http://localhost:8080";
+const SERVER = "https://zliczka.herokuapp.com/";
 
 const PERMISSION = {
     'ADMIN': 10,

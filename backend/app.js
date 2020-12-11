@@ -11,7 +11,7 @@ class App {
 
     constructor() {
         this.httpApp = express();
-        this.httpApp.use(cors({ origin: 'http://localhost:8080', credentials: true, }))
+        this.httpApp.use(cors({ origin: 'https://zliczka.herokuapp.com/', credentials: true, }))
         this.httpApp.use(cookieParser());
         this.httpApp.use(bodyParser.urlencoded({ extended: false }))
         this.httpApp.use(bodyParser.json())
