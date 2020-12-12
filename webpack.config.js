@@ -7,13 +7,15 @@ module.exports = {
     entry: {
         app: "./src/js/app.ts",
         login: "./src/js/login.ts",
+        admin: "./src/js/admin.ts",
+        adminUsers: "./src/js/adminUsers.ts",
     },
     output: {
         filename: "[name].min.js",
-        path: path.resolve(__dirname, "./dist")
+        path: path.resolve(__dirname, "./build")
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: path.join(__dirname, './build'),
         compress: true,
         publicPath: '/',
     },
@@ -63,7 +65,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'style.css',
             // chunkFilename: path.resolve(__dirname, 'build'),
-            chunkFilename: "styles.css",
+            chunkFilename: "css/styles.css",
         }),
         new HtmlWebpackPlugin({
             title: 'zliczka',
@@ -74,8 +76,20 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'zliczka login',
             template: path.resolve(__dirname, './src/templates/login.html'),
-            filename: 'login.html',
+            filename: 'login/index.html',
             chunks: ['login'],
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka admin',
+            template: path.resolve(__dirname, './src/templates/admin.html'),
+            filename: '/admin/admin.html',
+            chunks: ['admin'],
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka admin-users',
+            template: path.resolve(__dirname, './src/templates/admin-users.html'),
+            filename: '/admin/admin-users.html',
+            chunks: ['admin'],
         })
     ],
     optimization: {

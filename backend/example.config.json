@@ -6,6 +6,5 @@
     "password": "password",
     "port": "portNumber"
   },
-  "HASH_ROUND": "numver",
   "TOKEN_SECRET": "tokenSecret"
 }
