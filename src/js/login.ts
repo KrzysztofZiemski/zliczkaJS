@@ -1,5 +1,3 @@
-import { SERVER } from "./consts";
-
 interface loginInterface {
   login: string;
   password: string;
@@ -9,7 +7,7 @@ class Login {
   form: HTMLFormElement;
   url: string;
   constructor() {
-    this.url = `${SERVER}/auth`;
+    this.url = `/api/auth`;
     this.form = document.querySelector('form[name="login"]');
     this.form.addEventListener("submit", this.handleLogin.bind(this));
   }

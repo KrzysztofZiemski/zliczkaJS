@@ -1,4 +1,3 @@
-import { SERVER } from "../consts";
 import { getStringData } from "./helpers";
 import { Loader } from "./loader";
 import { Message } from "./message";
@@ -41,7 +40,7 @@ export class Reports {
   private isLoading: boolean;
 
   constructor() {
-    this.url = `${SERVER}/reports`;
+    this.url = `/api/reports`;
   }
 
   async fetch(date: Date): Promise<void> {

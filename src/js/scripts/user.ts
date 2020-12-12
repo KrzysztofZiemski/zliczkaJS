@@ -1,5 +1,3 @@
-import { SERVER } from "../consts";
-
 interface UserInterface {
   id: string;
   name: string;
@@ -23,7 +21,7 @@ class UserApi {
   private logged: boolean;
 
   constructor() {
-    this.url = `${SERVER}/user`;
+    this.url = `/api/user`;
   }
   async login(login: string, password: string) {
     try {

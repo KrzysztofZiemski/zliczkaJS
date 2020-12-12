@@ -1,4 +1,3 @@
-import { SERVER } from "../consts";
 import { Loader } from "./loader";
 
 const requestParam: RequestInit = {
@@ -24,7 +23,7 @@ export class TasksApi {
   private url: string;
 
   constructor() {
-    this.url = `${SERVER}/tasks`;
+    this.url = `api/tasks`;
     fetched = false;
   }
 

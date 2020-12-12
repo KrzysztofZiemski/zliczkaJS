@@ -1,4 +1,4 @@
-import "../style/tailwind.css";
+// import "../style/tailwind.css";
 //tymc\zsowo wyłączyłem style
 import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
 import {
@@ -72,6 +72,7 @@ class App {
   }
 
   changeDashboard(e: Event) {
+    // @ts-ignore: Unreachable code error
     const value: number = Number(e.target.value);
     // @ts-ignore: Unreachable code error
     const id: number = Number(e.target.dataset.id);

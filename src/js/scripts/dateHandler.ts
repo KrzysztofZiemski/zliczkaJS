@@ -18,6 +18,7 @@ export class DateHandler {
     return this.date;
   }
   change(e: Event): void {
+    // @ts-ignore
     this.date = new Date(e.target.value);
   }
 }
