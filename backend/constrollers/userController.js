@@ -3,22 +3,23 @@ const UserDB = require('../db/userDB')
 const { PERMISSION } = require('../consts');
 class UserController {
 
-    constructor() { }
+    constructor() {
+        this.userModel = new UserDB();
+    }
 
-    addUser({ name, active, login, lastName, password, permission }) {
-
-        //weryfikacja czy już istnieje taki user?
-        //weryfikacja czy dany perrmision może być nadany przez użytkownika
-
-        new UserDB().inserUser()
-        const userData = new User({
-            name: 'admin',
-            active: true,
-            login: 'admin',
-            lastName: 'adminLast',
-            password: bcrypt.hashSync(password, Number(process.env.HASH_ROUND)),
-            permission: permission || PERMISSION.USER
+    addUser(user) {
+        user.permission = PERMISSION.USER
+        user.password = bcrypt.hashSync(user.password, Number(process.env.HASH_ROUND))
+        user.active = true;
+        return this.userModel.inserUser(user);
+    }
+    async getEmployees() {
+        const employees = await this.userModel.getBy({ permission: PERMISSION.USER })
+        const output = employees.map(({ _doc, ...el }) => {
+            const { password, _id, __v, ...other } = _doc;
+            return { id: _id, ...other };
         })
+        return output;
     }
 }
 

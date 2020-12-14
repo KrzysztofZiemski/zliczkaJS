@@ -2,26 +2,22 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/userSchema');
 const { PERMISSION } = require('../consts');
 
-class UserDB {
+class UserModel {
 
-    constructor() { }
+    constructor() {
 
-    inserUser({ name, active, login, lastName, password, permission }) {
+    }
 
-        const userData = new User({
-            name,
-            active,
-            login,
-            lastName,
-            password,
-            permission
-
-        })
-        return userData.save((err) => {
-            console.log('weszło', err)
-        })
+    inserUser(user) {
+        return new User(user).save();
+    }
+    getAll() {
+        return User.find()
+    }
+    getBy(filters) {
+        return User.find(filters)
     }
 }
 
 
-module.exports = UserDB;
+module.exports = UserModel;

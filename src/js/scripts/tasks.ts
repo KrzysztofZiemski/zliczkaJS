@@ -1,7 +1,7 @@
 import { Loader } from "./loader";
 
 const requestParam: RequestInit = {
-  // credentials: 'include',
+  credentials: "include",
   mode: "cors",
   headers: {
     "Content-Type": "application/json",

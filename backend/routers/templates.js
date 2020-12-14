@@ -15,7 +15,6 @@ class TemplatesRouter {
 
     }
     adminUsers(req, res) {
-        console.log('weszło users')
         res.sendFile(path.resolve(__dirname, "../../build/admin/admin-users.html"));
     }
 
