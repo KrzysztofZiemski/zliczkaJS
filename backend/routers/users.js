@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const permission = require('../consts');
 const UserController = require('../constrollers/userController');
-const { Console } = require('console');
 
 class UserRouter {
 
@@ -16,8 +15,29 @@ class UserRouter {
 
     routes() {
         this.router.get('/employees', this.getEmployees.bind(this))
+        this.router.put('/activate/:id', this.activateUser.bind(this))
         this.router.get('/:id', this.get.bind(this))
         this.router.post('/', this.add.bind(this))
+        this.router.delete('/:id', this.remove.bind(this))
+    }
+    async activateUser(req, res) {
+
+        try {
+            const { active, password, permission, created, ...other } = await new UserController().activate(req.params.id);
+            res.status(200).json(other)
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    }
+
+    async remove(req, res) {
+        try {
+            const { active, password, permission, created, ...other } = await new UserController().removeEmployee(req.params.id);
+            res.status(200).json(other)
+        } catch (err) {
+            res.status(500).json(err)
+        }
+
     }
 
     async add(req, res) {
@@ -49,6 +69,7 @@ class UserRouter {
     async getEmployees(req, res) {
         try {
             const response = await new UserController().getEmployees();
+
             res.status(200).json(response)
         } catch (err) {
             console.log('err', err)

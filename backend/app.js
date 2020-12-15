@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const connection = require('./db/connection');
+require('dotenv').config();
 
 const AppRouters = require('./routers');
 const TemplatesRouter = require('./routers/templates');

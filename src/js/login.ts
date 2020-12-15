@@ -27,7 +27,6 @@ class Login {
 
   async login(login: string, password: string) {
     const data: loginInterface = { login, password };
-    console.log(login, password);
     const response = await fetch(this.url, {
       mode: "cors",
       credentials: "include",
@@ -38,8 +37,6 @@ class Login {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("po odpowiedzi", response);
   }
 
   validate(): boolean {

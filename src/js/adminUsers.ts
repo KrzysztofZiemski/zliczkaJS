@@ -1,4 +1,10 @@
-import { AddingEmployeeInterface, EmployeesApi } from "./scripts/employees";
+import { ChangeEvent } from "mongodb";
+import {
+  AddingEmployeeInterface,
+  EmployeesApi,
+  GettingEmployee,
+  TableEmployees,
+} from "./scripts/employees";
 import { Loader } from "./scripts/loader";
 import { Message } from "./scripts/message";
 
@@ -7,6 +13,13 @@ class AppUsers {
   constructor() {
     this.addEmployeeForm = document.querySelector("#add-user-form");
     this.addListeners();
+    this.handleEmployeesList();
+  }
+  public async handleEmployeesList() {
+    const employeesApi = new EmployeesApi();
+    await employeesApi.fetchAll();
+    const employeesList: Array<GettingEmployee> = employeesApi.getAll();
+    new TableEmployees().render(employeesList);
   }
 
   addListeners(): void {
@@ -14,9 +27,21 @@ class AppUsers {
       "submit",
       this.handleAddEmployee.bind(this)
     );
+    const inputFilter: HTMLInputElement = document.querySelector("#filter");
+    inputFilter.addEventListener("change", this.filter.bind(this));
   }
+  filter(e) {
+    const filter: string = e.target.value.toLowerCase().trim();
+    const list: Array<GettingEmployee> = new EmployeesApi().getAll();
+    const newList = list.filter(({ login, mail, name, lastName }) => {
+      console.log("weszło");
+      const stringToCheck = `${login}${mail}${name}${lastName}`;
+      return stringToCheck.toLocaleLowerCase().trim().includes(filter);
+    });
 
-  async handleAddEmployee(e) {
+    new TableEmployees().render(newList);
+  }
+  async handleAddEmployee(e: Event) {
     e.preventDefault();
 
     const nameField: HTMLInputElement = document.querySelector(
@@ -57,12 +82,12 @@ class AppUsers {
       loader.setShow();
 
       const response = await new EmployeesApi().add(data);
-      console.log("response", response);
+
       if (!response.ok) {
         throw new Error(`status ${response.status}`);
       }
-      loader.setHide();
 
+      loader.setHide();
       message.set("Dodano użytkownika");
     } catch (err) {
       loader.setHide();
