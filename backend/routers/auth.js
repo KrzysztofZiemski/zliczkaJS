@@ -1,5 +1,7 @@
 const express = require('express');
 const AuthController = require('../constrollers/authController');
+const hash = require('../utility/jwt')
+const { PERMISSION } = require('../consts');
 
 class AuthRouter {
     constructor() {
@@ -10,17 +12,20 @@ class AuthRouter {
 
     routes() {
         this.router.post('/', this.login.bind(this))
-        this.router.get('/', this.test.bind(this))
     }
 
     async login(req, res) {
-        const { login, password } = req.body;
+        try {
+            const { login, password } = req.body;
+            const response = await new AuthController().auth(login, password)
+            res.cookie('token', response.token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 8 }).status(200)
+            if (PERMISSION.ADMIN) return res.redirect('/admin')
+            if (PERMISSION.USER) return res.redirect('/')
 
-        const response = await new AuthController().auth(login, password)
-    }
-    test(req, res) {
+        } catch (err) {
+            res.status(err.status || 500).json(err)
+        }
 
-        res.send('dddd')
     }
 }
 

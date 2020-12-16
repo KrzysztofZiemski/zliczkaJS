@@ -30,7 +30,7 @@ const fakeResponse =
         },
     ]
 }
-
+//todo cały router
 class ReportsRouter {
     constructor() {
         this.router = express.Router();
@@ -59,7 +59,6 @@ class ReportsRouter {
 
     update(req, res) {
         const date = req.params.idReport;
-        console.log('update', date, req.body);
         res.status(200).send('ok')
     }
 

@@ -23,7 +23,7 @@ export class TasksApi {
   private url: string;
 
   constructor() {
-    this.url = `api/tasks`;
+    this.url = `../api/tasks`;
     fetched = false;
   }
 

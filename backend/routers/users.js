@@ -60,7 +60,8 @@ class UserRouter {
                 created: responseUser.created
             })
         } catch (err) {
-            res.status(500).json(err)
+
+            res.status(err.status || 500).json(err)
         }
     }
     get(req, res) {

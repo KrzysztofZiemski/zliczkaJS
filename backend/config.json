@@ -1,6 +1,5 @@
 {
   "DB": {
     "SERVER_URI": "mongodb+srv://Kriss:39VzJrUr234Mr0Hy@cluster0.udg0v.mongodb.net/Cluster0?retryWrites=true&w=majority"
-  },
-  "TOKEN_SECRET": "89dffdYkdd78!!kddhjd777!ldkds*dld"
+  }
 }

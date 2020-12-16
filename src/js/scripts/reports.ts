@@ -40,7 +40,7 @@ export class Reports {
   private isLoading: boolean;
 
   constructor() {
-    this.url = `/api/reports`;
+    this.url = `../api/reports`;
   }
 
   async fetch(date: Date): Promise<void> {

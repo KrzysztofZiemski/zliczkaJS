@@ -1,3 +1,6 @@
+import { Message } from "./scripts/message";
+import { Loader } from "./scripts/loader";
+
 interface loginInterface {
   login: string;
   password: string;
@@ -26,17 +29,31 @@ class Login {
   }
 
   async login(login: string, password: string) {
-    const data: loginInterface = { login, password };
-    const response = await fetch(this.url, {
-      mode: "cors",
-      credentials: "include",
-      method: "POST",
-      redirect: "follow",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const loader = new Loader();
+    loader.setShow();
+    try {
+      const data: loginInterface = { login, password };
+      const response = await fetch(this.url, {
+        mode: "cors",
+        credentials: "include",
+        method: "POST",
+        // redirect: "follow",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      loader.setHide();
+      if (response.redirected && response.status === 200) {
+        document.location.href = response.url;
+      }
+      if (response.status === 401) {
+        return new Message().set("Błędny login lub hasło");
+      }
+    } catch (err) {
+      loader.setHide();
+      return new Message().set("Błąd logoawnia - sróbuj ponownie");
+    }
   }
 
   validate(): boolean {

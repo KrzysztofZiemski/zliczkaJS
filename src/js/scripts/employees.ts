@@ -161,7 +161,6 @@ export class TableEmployees {
   private createTr(employee: GettingEmployee) {
     const tr: HTMLTableRowElement = document.createElement("tr");
 
-    const id: HTMLTableCellElement = this.createTd(employee.id);
     const fullName: HTMLTableCellElement = this.createTd(
       `${employee.name} ${employee.lastName}`
     );
@@ -172,7 +171,6 @@ export class TableEmployees {
     );
     const button = this.createButton(employee.id, employee.active);
 
-    tr.append(id);
     tr.append(fullName);
     tr.append(mail);
     tr.append(login);

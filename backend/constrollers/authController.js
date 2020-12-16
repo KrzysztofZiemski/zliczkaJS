@@ -1,6 +1,6 @@
 const UserController = require('./userController');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const hash = require('../utility/jwt');
 
 class AuthController {
     constructor() {
@@ -11,32 +11,33 @@ class AuthController {
         return bcrypt.compare(inputPassword, userPassword)
     }
 
-    async auth(checkingLogin, checkingPassword) {
-        try {
-            const userApi = new UserController();
-            const [user] = await userApi.get({ login: checkingLogin });
-            if (user) {
-                const isOk = await this.checkPassword(checkingPassword, user.password);
-                const isActive = user.active;
+    auth(checkingLogin, checkingPassword) {
 
-                if (!isOk || !isActive) return ({ status: 401 })
+        const userApi = new UserController();
 
-                const { active, login, password, created, ...toHash } = user
+        return userApi.get({ login: checkingLogin })
+            .then(async ([user]) => {
 
-                const cookie = jwt.sign(toHash,
-                    process.env.SECRET_TOKEN, {
-                    expiresIn: "10h"
-                });
+                if (user) {
+                    const isOk = await this.checkPassword(checkingPassword, user.password);
+                    const isActive = user.active;
 
-                return ({ status: 200, cookie })
-            } else {
-                return ({ status: 401 })
-            }
+                    if (!isOk || !isActive) {
+                        const error = new Error('błędny login lub hasło')
+                        error.status = 401
+                        throw error;
+                    }
 
-        } catch (err) {
-            return ({ status: 500, cookie: {}, body: { err } })
-        }
+                    const { name, lastName, _id, permission, ...other } = user
+                    return { token: hash.createHash({ name, lastName, id: _id, permission }), permission: permission }
+                } else {
+                    const error = new Error('nie znaleziono użytkownika')
+                    error.status = 401;
+                    throw error
+                }
+            })
     }
 }
+
 
 module.exports = AuthController;

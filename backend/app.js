@@ -23,7 +23,8 @@ class App {
 
 
         this.port = process.env.PORT || 8080;
-        connection()
+        connection();
+
         this.stratServer(this.port).then(() => {
             console.log(`server runned on port ${this.port}`);
         })
