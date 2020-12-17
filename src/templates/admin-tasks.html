@@ -45,7 +45,7 @@
           <h2
             class="p-3 pl-5 text-white block bg-blue-500 rounded-t-lg uppercase spacing-5 font-bold"
           >
-            Dodaj zadanie
+            Dodaj czynność
           </h2>
           <form
             action=""
@@ -53,7 +53,7 @@
             id="add-task-form"
           >
             <label class="block text-gray-700 text-sm font-bold m-2" for="name">
-              <span class="block mb-2">Nazwa zadania</span>
+              <span class="block mb-2">Nazwa czynności</span>
               <input
                 class="shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="name"
@@ -95,7 +95,7 @@
               class="block text-gray-700 text-sm font-bold m-2"
               for="intensityTime"
             >
-              <span class="block mb-2">Czasochłonność</span>
+              <span class="block mb-2">Czasochłonność w minutach</span>
               <input
                 class="shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:bg-gray-200"
                 id="intensityTime"
@@ -110,6 +110,104 @@
               Stwórz
             </button>
           </form>
+        </div>
+        <div class="">
+          <h2
+            class="p-3 pl-5 text-white block bg-blue-500 rounded-t-lg uppercase spacing-5 font-bold"
+          >
+            Lista czynności
+          </h2>
+          <div>
+            <div
+              class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12"
+            >
+              <div class="flex flex-start">
+                <div
+                  class="inline-flex border rounded w-7/12 px-2 lg:px-6 h-12 bg-transparent mx-2"
+                >
+                  <div
+                    class="flex flex-wrap items-stretch w-full h-full mb-6 relative"
+                  >
+                    <div class="flex">
+                      <span
+                        class="flex items-center leading-normal bg-transparent rounded rounded-r-none border border-r-0 border-none lg:px-3 py-2 whitespace-no-wrap text-grey-dark text-sm"
+                      >
+                        <svg
+                          width="18"
+                          height="18"
+                          class="w-4 lg:w-auto"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M8.11086 15.2217C12.0381 15.2217 15.2217 12.0381 15.2217 8.11086C15.2217 4.18364 12.0381 1 8.11086 1C4.18364 1 1 4.18364 1 8.11086C1 12.0381 4.18364 15.2217 8.11086 15.2217Z"
+                            stroke="#455A64"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M16.9993 16.9993L13.1328 13.1328"
+                            stroke="#455A64"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      id="filter"
+                      class="flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xxs lg:text-xs text-gray-500 font-thin"
+                      placeholder="Search"
+                    />
+                  </div>
+                </div>
+                <label class="flex items-center text-fm">
+                  <input type="checkbox" class="form-checkbox" />
+                  <span class="ml-2">pokaż nieaktywne</span>
+                </label>
+              </div>
+            </div>
+            <div
+              class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg"
+            >
+              <table class="min-w-full" id="task-list">
+                <thead>
+                  <tr>
+                    <th
+                      class="py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider"
+                    >
+                      Nazwa Czynności
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider"
+                    >
+                      Grupa
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 text-blue-500 tracking-wider"
+                    >
+                      Czasochłonność
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 text-blue-500 tracking-wider"
+                    >
+                      Sparametryzowane
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 text-blue-500 tracking-wider"
+                    >
+                      Status
+                    </th>
+
+                    <th class="px-6 py-3 border-b-2 border-gray-300"></th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </main>
     </div>
@@ -146,6 +244,7 @@
         </button>
       </div>
     </div>
+
     <script src="../adminTasks.min.js"></script>
   </body>
 </html>

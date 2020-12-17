@@ -1,12 +1,7 @@
 import { Loader } from "./loader";
 import { Message } from "./message";
-
-interface AddTask {
-  name: string;
-  group: string;
-  parameterized: boolean | null;
-  intensityTime: number | null;
-}
+import { AddTask } from "./adminTasks";
+import { AdminTasks } from "./adminTasks";
 
 export class AddAdminTask {
   form: HTMLFormElement;
@@ -14,7 +9,6 @@ export class AddAdminTask {
   url: string;
 
   constructor() {
-    this.url = "../api/tasks/";
     this.form = document.querySelector("#add-task-form");
     this.data = {
       name: "",
@@ -47,7 +41,7 @@ export class AddAdminTask {
     const message = new Message();
     try {
       loader.setShow();
-      const response = await this.addTask();
+      const response = await new AdminTasks().addTask(this.data);
       loader.setHide();
       if (response.status === 200) return message.set("dodano czynność");
       return message.set(
@@ -60,17 +54,7 @@ export class AddAdminTask {
       loader.setHide();
     }
   }
-  private addTask() {
-    return fetch(this.url, {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify(this.data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-    });
-  }
+
   private validate() {
     let isOk = true;
     if (this.data.name.length < 3) isOk = false;
