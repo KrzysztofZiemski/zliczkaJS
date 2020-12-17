@@ -1,6 +1,4 @@
-const bcrypt = require('bcryptjs');
 const User = require('./models/userSchema');
-const { PERMISSION } = require('../consts');
 
 class UserModel {
 

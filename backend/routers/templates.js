@@ -12,9 +12,13 @@ class TemplatesRouter {
     // /
     routes() {
         this.router.get('/admin/users', checkPermission(10), this.adminUsers);
+        this.router.get('/admin/tasks', checkPermission(10), this.adminTasks);
         this.router.get('/admin/*', checkPermission(10), this.admin);
         this.router.get('/dashboard/*', checkPermission(1), this.dashboard);
         this.router.get('/', checkPermission(), this.redirect);
+    }
+    adminTasks(req, res) {
+        res.sendFile(path.resolve(__dirname, "../../build/admin/admin-tasks.html"));
     }
     adminUsers(req, res) {
         res.sendFile(path.resolve(__dirname, "../../build/admin/admin-users.html"));

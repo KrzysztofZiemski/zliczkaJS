@@ -12,13 +12,13 @@
         <h1 class="self-start">Zliczka</h1>
         <ul class="flex w-full ml-36">
           <li class="ml-9">
-            <a href="/admin" class="text-white">raporty</a>
+            <a href="/admin" class="hover:text-white">raporty</a>
           </li>
           <li class="ml-9">
             <a href="/admin/users" class="hover:text-white">użytkownicy</a>
           </li>
           <li class="ml-9">
-            <a href="/admin/tasks" class="hover:text-white">zadania</a>
+            <a href="/admin/tasks" class="text-white">zadania</a>
           </li>
         </ul>
         <div
@@ -40,7 +40,78 @@
           </svg>
         </div>
       </nav>
-      <main class="flex-grow"></main>
+      <main class="flex-grow p-5">
+        <div class="shadow-lg mb-4">
+          <h2
+            class="p-3 pl-5 text-white block bg-blue-500 rounded-t-lg uppercase spacing-5 font-bold"
+          >
+            Dodaj zadanie
+          </h2>
+          <form
+            action=""
+            class="flex flex-wrap border-8 border-blue-500 border-t-0"
+            id="add-task-form"
+          >
+            <label class="block text-gray-700 text-sm font-bold m-2" for="name">
+              <span class="block mb-2">Nazwa zadania</span>
+              <input
+                class="shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Nazwa zadania"
+              />
+            </label>
+            <label
+              class="block text-gray-700 text-sm font-bold m-2"
+              for="group"
+            >
+              <span class="block mb-2">Nazwa grupy</span>
+              <input
+                class="shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="group"
+                name="group"
+                type="text"
+                placeholder="Nazwa grupy"
+              />
+            </label>
+            <label
+              class="block text-gray-700 text-sm font-bold m-2"
+              for="parameterized"
+            >
+              <span class="block mb-2 max-w-2xl px-3">Sparametryzowane</span>
+              <select
+                class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="parameterized"
+                name="parameterized"
+                placeholder="Czy sparametrycowane"
+              >
+                <option value=""></option>
+                <option value="true">TAK</option>
+                <option value="false">NIE</option>
+              </select>
+            </label>
+            <label
+              class="block text-gray-700 text-sm font-bold m-2"
+              for="intensityTime"
+            >
+              <span class="block mb-2">Czasochłonność</span>
+              <input
+                class="shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:bg-gray-200"
+                id="intensityTime"
+                name="intensityTime"
+                type="number"
+                disabled
+              />
+            </label>
+            <button
+              class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline m-5"
+            >
+              Stwórz
+            </button>
+          </form>
+        </div>
+      </main>
     </div>
     <div
       id="loader"
@@ -75,6 +146,6 @@
         </button>
       </div>
     </div>
-    <script src="../admin.min.js"></script>
+    <script src="../adminTasks.min.js"></script>
   </body>
 </html>

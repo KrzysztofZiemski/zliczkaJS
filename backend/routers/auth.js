@@ -1,6 +1,5 @@
 const express = require('express');
 const AuthController = require('../constrollers/authController');
-const hash = require('../utility/jwt')
 const { PERMISSION } = require('../consts');
 
 class AuthRouter {

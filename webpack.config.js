@@ -9,6 +9,7 @@ module.exports = {
         login: "./src/js/login.ts",
         admin: "./src/js/admin.ts",
         adminUsers: "./src/js/adminUsers.ts",
+        adminTasks: "./src/js/adminTasks.ts",
     },
     output: {
         filename: "[name].min.js",
@@ -89,7 +90,13 @@ module.exports = {
             title: 'zliczka admin-users',
             template: path.resolve(__dirname, './src/templates/admin-users.html'),
             filename: '/admin/admin-users.html',
-            chunks: ['admin'],
+            chunks: ['adminUsers'],
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka admin-tasks',
+            template: path.resolve(__dirname, './src/templates/admin-tasks.html'),
+            filename: '/admin/admin-tasks.html',
+            chunks: ['adminTasks'],
         })
     ],
     optimization: {

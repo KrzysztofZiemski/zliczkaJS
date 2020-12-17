@@ -1,6 +1,10 @@
 
 const express = require('express');
 const path = require('path');
+const { PERMISSION } = require('../consts');
+const checkPermission = require('../middlewares/authMiddleware')
+const TaskController = require('../constrollers/taskController');
+
 
 const fakeResponse = [
     {
@@ -77,20 +81,34 @@ class TasksRouter {
     routes() {
         this.router.get('/', this.getAll);
         this.router.get('/:id', this.get.bind(this));
+        this.router.post('/', checkPermission(PERMISSION.ADMIN), this.add.bind(this));
     }
 
     getAll = (req, res) => {
         res.status(200).json(fakeResponse)
     }
 
+    async add(req, res) {
+        try {
+            const task = req.body;
+            let isOk = true;
+            if (typeof task.name !== 'string' || task.name.length < 3) isOk = false;
+            if (typeof task.group !== 'string' || task.name.length < 2) isOk = false;
+            if (typeof task.parameterized !== 'boolean') isOk = false;
+            if (task.parameterized === true && (typeof task.intensityTime !== 'number' || task.intensityTime < 1)) isOk = false;
+            if (!isOk) return res.status(400).send('błędne zapytanie');
+            const response = await new TaskController().addTask(task);
+            res.status(200).json(response);
+
+        } catch (err) {
+            console.log('error tasks', err)
+        }
+
+    }
     get(req, res) {
         const id = req.params.id;
 
     }
-    // async add(req, res) {
-    //     const data = req.body;
-
-    // }
 }
 
 module.exports = TasksRouter;
