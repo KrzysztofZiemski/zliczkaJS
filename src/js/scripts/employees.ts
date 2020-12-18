@@ -123,10 +123,7 @@ export class TableEmployees {
     td.append(span1);
     return td;
   }
-  setFilter(value) {
-    //string.include(value)
-    //this.render()
-  }
+
   createButton(id: string, active: boolean) {
     const td: HTMLTableDataCellElement = document.createElement("td");
     td.setAttribute(

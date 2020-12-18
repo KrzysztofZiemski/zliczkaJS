@@ -33,6 +33,7 @@ export class AdminTasks {
   }
   public async update(id: string) {
     const data = tasks.find((task) => task.id === id);
+    console.log(data);
     const response = await fetch(`${this.url}/${id}`, {
       method: "PUT",
       credentials: "include",
@@ -174,7 +175,6 @@ export class TableAdminTasks {
         await new AdminTasks().update(id);
         const adminTaskApi = new AdminTasks();
         adminTaskApi.setEditable(id, false);
-        this.render(adminTaskApi.getAll());
         new Message().set("Zaktualizowano");
       } catch (err) {
         new Message().set(
@@ -288,9 +288,9 @@ export class TableAdminTasks {
     optionFalse.innerText = "NIE";
     select.addEventListener("change", (e) => {
       //@ts-ignore
-      if (e.target.value === "false") return (task.parameterized = false);
+      if (e.target.value === "false") task.active = false;
       //@ts-ignore
-      if (e.target.value === "true") return (task.parameterized = true);
+      if (e.target.value === "true") task.active = true;
     });
     select.append(optionTrue);
     select.append(optionFalse);
@@ -298,14 +298,14 @@ export class TableAdminTasks {
     return td;
   }
 
-  createSelectActive(active: boolean) {
+  createSelectActive(task: Task) {
     const td: HTMLTableDataCellElement = document.createElement("td");
     td.setAttribute(
       "class",
       "px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5"
     );
     const select = document.createElement("select");
-    select.value = active ? "true" : "false";
+    select.value = task.active ? "true" : "false";
 
     const optionTrue = document.createElement("option");
     optionTrue.value = "true";
@@ -319,6 +319,12 @@ export class TableAdminTasks {
       "class",
       "w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
     );
+    select.addEventListener("change", (e) => {
+      //@ts-ignore
+      if (e.target.value === "false") task.active = false;
+      //@ts-ignore
+      if (e.target.value === "true") task.active = true;
+    });
 
     select.append(optionTrue);
     select.append(optionFalse);
@@ -353,7 +359,7 @@ export class TableAdminTasks {
     const group = this.createInputTdGroup(task);
     const intensityTime = this.createInputTdIntensityTime(task);
     const parameterized = this.createSelectParametrized(task);
-    const active = this.createSelectActive(task.active);
+    const active = this.createSelectActive(task);
     const button = this.createChangeButton(task.id);
     tr.append(name);
     tr.append(group);
@@ -365,8 +371,8 @@ export class TableAdminTasks {
   }
 
   public render(list: Array<Task>) {
-    console.log(list);
     this.container.innerHTML = "";
+
     list.forEach((task) => {
       if (task.editable) return this.createFormTr(task);
       return this.createTr(task);
