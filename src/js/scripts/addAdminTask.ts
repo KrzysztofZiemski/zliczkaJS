@@ -1,7 +1,7 @@
 import { Loader } from "./loader";
 import { Message } from "./message";
-import { AddTask } from "./adminTasks";
-import { AdminTasks } from "./adminTasks";
+import { AddTask } from "./adminTasksApi";
+import { AdminTasks } from "./adminTasksApi";
 
 export class AddAdminTask {
   form: HTMLFormElement;

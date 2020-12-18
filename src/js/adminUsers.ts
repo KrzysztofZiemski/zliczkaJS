@@ -10,12 +10,10 @@ import { Message } from "./scripts/message";
 
 class AppUsers {
   addEmployeeForm: HTMLFormElement;
-  stringFilter: string;
-  filterCheckbox: HTMLInputElement;
+
   constructor() {
-    this.stringFilter = "";
     this.addEmployeeForm = document.querySelector("#add-user-form");
-    this.filterCheckbox = document.querySelector("#filter-checkbox");
+
     this.addListeners();
     this.handleEmployeesList();
   }
@@ -29,41 +27,11 @@ class AppUsers {
       "submit",
       this.handleAddEmployee.bind(this)
     );
-    const inputFilter: HTMLInputElement = document.querySelector("#filter");
-    inputFilter.addEventListener("change", this.handleChangeFilters.bind(this));
-
-    document
-      .querySelector("#filter-checkbox")
-      .addEventListener("change", this.renderTable.bind(this));
   }
   renderTable() {
-    const employeesApi = new EmployeesApi();
-    const employeesList: Array<GettingEmployee> = employeesApi.getAll();
-    const list: Array<GettingEmployee> = this.filter(employeesList);
-
-    new TableEmployees().render(list);
+    new TableEmployees().render();
   }
 
-  filter(list: Array<GettingEmployee>) {
-    return list.filter(({ login, mail, name, lastName, active }) => {
-      const stringToCheck = `${login}${mail}${name}${lastName}`;
-      const stringMatch = stringToCheck
-        .toLocaleLowerCase()
-        .trim()
-        .includes(this.stringFilter);
-      if (this.filterCheckbox.checked) {
-        return stringMatch;
-      } else {
-        console.log("weszło", stringMatch);
-        return stringMatch && active;
-      }
-    });
-  }
-
-  handleChangeFilters(e) {
-    this.stringFilter = e.target.value.toLowerCase().trim();
-    this.renderTable();
-  }
   async handleAddEmployee(e: Event) {
     e.preventDefault();
 

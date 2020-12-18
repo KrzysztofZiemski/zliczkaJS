@@ -79,9 +79,43 @@ export class EmployeesApi {
 
 export class TableEmployees {
   container: HTMLTableSectionElement;
+  stringFilter: string;
+  filterCheckbox: HTMLInputElement;
+
   constructor() {
+    this.stringFilter = "";
+    this.filterCheckbox = document.querySelector("#filter-checkbox");
     const table = document.querySelector("#employees-list");
     if (table) this.container = table.querySelector("tbody");
+    this.listeners();
+  }
+  listeners() {
+    const inputFilter: HTMLInputElement = document.querySelector("#filter");
+    inputFilter.addEventListener("change", this.handleChangeFilters.bind(this));
+
+    document
+      .querySelector("#filter-checkbox")
+      .addEventListener("change", this.render.bind(this));
+  }
+  handleChangeFilters(e) {
+    this.stringFilter = e.target.value.toLowerCase().trim();
+    this.render();
+  }
+
+  filter(list: Array<GettingEmployee>) {
+    return list.filter(({ login, mail, name, lastName, active }) => {
+      const stringToCheck = `${login}${mail}${name}${lastName}`;
+      const stringMatch = stringToCheck
+        .toLocaleLowerCase()
+        .trim()
+        .includes(this.stringFilter);
+      if (this.filterCheckbox.checked) {
+        return stringMatch;
+      } else {
+        console.log("weszło", stringMatch);
+        return stringMatch && active;
+      }
+    });
   }
   private createTd(value: string) {
     const td: HTMLTableDataCellElement = document.createElement("td");
@@ -148,7 +182,7 @@ export class TableEmployees {
       await employeeApi.fetchAll();
       const employees = employeeApi.getAll();
 
-      this.render(employees);
+      this.render();
     });
     td.append(button);
 
@@ -176,8 +210,10 @@ export class TableEmployees {
     this.container.append(tr);
   }
 
-  public render(list: Array<GettingEmployee>) {
+  public render() {
+    const list: Array<GettingEmployee> = new EmployeesApi().getAll();
+    const afterFilterList = this.filter(list);
     this.container.innerHTML = "";
-    list.forEach((employee) => this.createTr(employee));
+    afterFilterList.forEach((employee) => this.createTr(employee));
   }
 }

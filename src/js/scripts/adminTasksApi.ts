@@ -6,7 +6,11 @@ export interface AddTask {
   parameterized: boolean | null;
   intensityTime: number | null;
 }
-export interface Task extends AddTask {
+export interface Task {
+  name: string;
+  group: string;
+  parameterized: boolean | null;
+  intensityTime: number | null;
   active: boolean;
   id: string;
   editable?: boolean;
@@ -82,9 +86,23 @@ export class AdminTasks {
 
 export class TableAdminTasks {
   container: HTMLTableSectionElement;
+  stringFilter: string;
+  filterCheckbox: HTMLInputElement;
+
   constructor() {
+    this.stringFilter = "";
+    this.filterCheckbox = document.querySelector("#filter-checkbox");
     const table = document.querySelector("#task-list");
     if (table) this.container = table.querySelector("tbody");
+
+    this.listeners();
+  }
+  listeners() {
+    const inputFilter: HTMLInputElement = document.querySelector("#filter");
+    inputFilter.addEventListener("change", this.handleFilterChange.bind(this));
+    document
+      .querySelector("#filter-checkbox")
+      .addEventListener("change", this.render.bind(this));
   }
   private createTd(value: string) {
     const td: HTMLTableDataCellElement = document.createElement("td");
@@ -107,15 +125,17 @@ export class TableAdminTasks {
     span1.setAttribute(
       "class",
       `relative inline-block px-3 py-1 font-semibold ${
-        value === "aktywny" || "TAK" ? "text-green-900" : "text-red-900"
-      } leading-tight text-center`
+        value === "aktywny" || value === "TAK"
+          ? "text-green-900"
+          : "text-red-900"
+      } leading-tight text-center min-w-72`
     );
 
     const span2: HTMLSpanElement = document.createElement("span");
     span2.setAttribute(
       "class",
       `absolute inset-0 ${
-        value === "aktywny" || "TAK" ? "bg-green-200" : "bg-red-200"
+        value === "aktywny" || value === "TAK" ? "bg-green-200" : "bg-red-200"
       } opacity-50 rounded-full`
     );
     const span3: HTMLSpanElement = document.createElement("span");
@@ -144,10 +164,9 @@ export class TableAdminTasks {
     editButton.innerText = "EDYTUJ";
     //todo button loader
     editButton.addEventListener("click", () => {
-      console.log("id", id);
       const adminTaskApi = new AdminTasks();
       adminTaskApi.setEditable(id);
-      this.render(adminTaskApi.getAll());
+      this.render();
     });
     td.append(editButton);
 
@@ -175,6 +194,7 @@ export class TableAdminTasks {
         await new AdminTasks().update(id);
         const adminTaskApi = new AdminTasks();
         adminTaskApi.setEditable(id, false);
+        this.render();
         new Message().set("Zaktualizowano");
       } catch (err) {
         new Message().set(
@@ -305,7 +325,6 @@ export class TableAdminTasks {
       "px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5"
     );
     const select = document.createElement("select");
-    select.value = task.active ? "true" : "false";
 
     const optionTrue = document.createElement("option");
     optionTrue.value = "true";
@@ -317,7 +336,7 @@ export class TableAdminTasks {
 
     select.setAttribute(
       "class",
-      "w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      "shadow appearance-none border rounded  py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
     );
     select.addEventListener("change", (e) => {
       //@ts-ignore
@@ -328,6 +347,9 @@ export class TableAdminTasks {
 
     select.append(optionTrue);
     select.append(optionFalse);
+
+    select.value = task.active ? "true" : "false";
+
     td.append(select);
     return td;
   }
@@ -352,6 +374,26 @@ export class TableAdminTasks {
     td.append(input);
     return td;
   }
+  handleFilterChange(e) {
+    this.stringFilter = e.target.value.toLowerCase().trim();
+    this.render();
+  }
+
+  filter(list: Array<Task>) {
+    const x = list.filter(({ name, group, active }) => {
+      const stringToCheck = `${name}${group}`;
+      const stringMatch = stringToCheck
+        .toLocaleLowerCase()
+        .trim()
+        .includes(this.stringFilter);
+      if (this.filterCheckbox.checked) {
+        return stringMatch;
+      } else {
+        return stringMatch && active;
+      }
+    });
+    return x;
+  }
 
   private createFormTr(task: Task) {
     const tr: HTMLTableRowElement = document.createElement("tr");
@@ -370,10 +412,11 @@ export class TableAdminTasks {
     this.container.append(tr);
   }
 
-  public render(list: Array<Task>) {
+  public render() {
     this.container.innerHTML = "";
-
-    list.forEach((task) => {
+    const list: Array<Task> = new AdminTasks().getAll();
+    const listAfterFilters = this.filter(list);
+    listAfterFilters.forEach((task) => {
       if (task.editable) return this.createFormTr(task);
       return this.createTr(task);
     });
