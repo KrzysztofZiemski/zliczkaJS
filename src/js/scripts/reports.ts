@@ -16,19 +16,21 @@ export const TYPE_FIELD_REPORT = {
 };
 
 interface TaskReportInterface {
-  id: number;
+  taskId: string;
   name: string;
-  isParameterized: boolean;
+  parametrized: boolean;
   count: number;
   time?: number;
+  intensityTime?: number;
 }
 
 export interface ReportInterface {
-  idReport: number;
-  userId: number;
+  id: string;
+  userId: string;
   description: string;
   date: Date;
   tasks: Array<TaskReportInterface>;
+  confirmed: boolean;
 }
 
 let report: ReportInterface;
@@ -43,34 +45,43 @@ export class Reports {
     this.url = `../api/reports`;
   }
 
-  async fetch(date: Date): Promise<void> {
+  async fetch(date: string): Promise<void> {
     const loader = new Loader();
     this.isLoading = true;
     setTimeout(() => {
       if (this.isLoading) loader.setShow();
     }, 500);
     try {
-      const response = await fetch(`${this.url}/${date.getTime()}`);
+      const response = await fetch(`${this.url}/${date}`);
 
-      if (response.ok) {
+      if (response.status === 204) {
+        const response = await fetch(`${this.url}/create/${date}`);
+        if (response.status === 200) {
+          const x = await response.json();
+          console.log(x);
+        }
+        const error = new Error();
+        error.message = `Błąd ${response.status}`;
+        throw error;
+      } else if (response.status === 200) {
         fetched = true;
         const fetchedReport: ReportInterface = await response.json();
         report = fetchedReport;
         saved = true;
       } else {
-        throw new Error(
-          `Error connection getting tasks status ${response.status}`
-        );
+        const error = new Error(`Błąd ${response.status}`);
+        error.message = `Błąd ${response.status}`;
+        throw error;
       }
       this.isLoading = false;
       loader.setHide();
-    } catch (e) {
+    } catch (err) {
       this.isLoading = false;
       loader.setHide();
 
       new Message().set(
         "Błąd podczas pobierania zadań - spróbuj za chwilę",
-        `Błąd ${e.message}`
+        `${err.message}`
       );
     }
   }
@@ -93,7 +104,7 @@ export class Reports {
     }, 200);
 
     try {
-      const response = await fetch(`${this.url}/${report.idReport}`, {
+      const response = await fetch(`${this.url}/${report.id}`, {
         ...requestParam,
         ...options,
       });
@@ -117,7 +128,12 @@ export class Reports {
     }
   }
 
-  add(id: number, name: string, isParameterized: boolean): void {
+  add(
+    id: string,
+    name: string,
+    parametrized: boolean,
+    intensityTime?: number
+  ): void {
     saved = false;
     const doubledItem: TaskReportInterface | undefined = this.get(id);
 
@@ -125,36 +141,52 @@ export class Reports {
       //TODO addition count++ or not?
     } else {
       let newItem: TaskReportInterface;
-      isParameterized
-        ? (newItem = { id, name, isParameterized, count: 1 })
-        : (newItem = { id, name, isParameterized, count: 1, time: 0 });
+      parametrized
+        ? (newItem = {
+            taskId: id,
+            name,
+            parametrized: parametrized,
+            count: 1,
+            intensityTime,
+          })
+        : (newItem = {
+            taskId: id,
+            name,
+            parametrized: parametrized,
+            count: 1,
+            time: 0,
+          });
 
       report.tasks.push(newItem);
     }
   }
-  remove(id: number) {
+  remove(id: string) {
     saved = false;
-    report.tasks = report.tasks.filter((el) => el.id !== id);
+    report.tasks = report.tasks.filter((el) => el.taskId !== id);
   }
 
-  private updateCount(id: number, value: number) {
+  private updateCount(id: string, value: number) {
     this.get(id).count = value;
   }
 
-  private updateTime(id: number, value: number) {
+  private updateTime(id: string, value: number) {
     this.get(id).time = value;
   }
 
-  get(id: number): TaskReportInterface {
-    return report.tasks.find((el) => el.id === id);
+  get(id: string): TaskReportInterface {
+    return report.tasks.find((el) => el.taskId === id);
   }
-  change(id: number, value: number, type: string) {
+  change(id: string, value: number, type: string) {
     saved = false;
     if (type === TYPE_FIELD_REPORT.COUNT) {
       this.updateCount(id, value);
     } else if (TYPE_FIELD_REPORT.TIME) {
       this.updateTime(id, value);
     }
+  }
+  comment(value: string) {
+    report.description = value;
+    console.log(report);
   }
   getAll() {
     if (!report) return;
@@ -229,7 +261,7 @@ export class RenderReportsElements {
 
     const tbody: HTMLElement = document.createElement("tbody");
 
-    reports.forEach(({ name, count, time, id }, index) => {
+    reports.forEach(({ name, count, time, taskId: id }, index) => {
       //create tr
       const tr = document.createElement("tr");
       const classTr =

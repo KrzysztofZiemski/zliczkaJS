@@ -60,7 +60,7 @@ export class AddAdminTask {
     if (this.data.name.length < 3) isOk = false;
     if (this.data.group.length < 3) isOk = false;
     if (this.data.parameterized === null) isOk = false;
-    if (this.data.parameterized === false)
+    if (this.data.parameterized === true)
       if (this.data.intensityTime < 1 || this.data.intensityTime === null)
         isOk = false;
 

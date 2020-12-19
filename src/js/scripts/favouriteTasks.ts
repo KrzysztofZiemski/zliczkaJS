@@ -42,12 +42,12 @@ export class FavouriteTasks {
 
       tasks.push(newTask);
     } else {
-      const { name, active, intensityTime, type, isParameterized } = addedTask;
+      const { name, active, intensityTime, group, parameterized } = addedTask;
       existingTask.name = addedTask.name;
       existingTask.active = active;
       existingTask.intensityTime = intensityTime;
-      existingTask.type = type;
-      existingTask.isParameterized = isParameterized;
+      existingTask.group = group;
+      existingTask.parameterized = parameterized;
       existingTask.count++;
     }
 
@@ -59,16 +59,19 @@ export class FavouriteTasks {
   intensityTime: number;
   type: string;
   isParameterized: boolean;
-  createButton(idFavouritedTask: number) {
+  createButton(idFavouritedTask: string) {
     const button: HTMLButtonElement = document.createElement("button");
     button.setAttribute("class", "m-3 mr-6 shadow-lg");
 
-    const { id, name, isParameterized }: TaskInterface = new TasksApi().get(
-      idFavouritedTask
-    );
+    const {
+      id,
+      name,
+      parameterized,
+      intensityTime,
+    }: TaskInterface = new TasksApi().get(idFavouritedTask);
 
     button.addEventListener("click", () => {
-      new Reports().add(id, name, isParameterized);
+      new Reports().add(id, name, parameterized);
       new RenderReportsElements().render();
     });
 
@@ -91,6 +94,7 @@ export class FavouriteTasks {
   createTask(favouriteTask: FavouriteTaskInterface) {
     const li: HTMLLIElement = document.createElement("li");
     li.setAttribute("class", "flex items-center shadow-lg");
+
     const button = this.createButton(favouriteTask.id);
     li.append(button);
     li.append(this.createTextElement(favouriteTask.name));
@@ -99,7 +103,6 @@ export class FavouriteTasks {
 
   render() {
     const favouriteTasks = this.getTop();
-
     const liElements: Array<HTMLLIElement> = favouriteTasks.map(
       (favouriteTask) => this.createTask(favouriteTask)
     );

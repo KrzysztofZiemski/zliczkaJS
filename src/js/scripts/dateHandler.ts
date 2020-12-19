@@ -17,8 +17,18 @@ export class DateHandler {
   getDate(): Date {
     return this.date;
   }
+  getDateFormat() {
+    const year = this.date.getFullYear();
+    const month =
+      this.date.getMonth() > 8
+        ? this.date.getMonth() + 1
+        : `0${this.date.getMonth()}`;
+    const day =
+      this.date.getDate() > 9 ? this.date.getDate() : `0${this.date.getDate()}`;
+    return `${year}-${month}-${day}`;
+  }
   change(e: Event): void {
     // @ts-ignore
-    this.date = new Date(e.target.value);
+    this.date = new Date(e.target.value, 0, 0, 0);
   }
 }

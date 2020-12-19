@@ -9,12 +9,12 @@ const requestParam: RequestInit = {
 };
 
 export interface TaskInterface {
-  id: number;
+  id: string;
   name: string;
   active: boolean;
   intensityTime: number;
-  type: string;
-  isParameterized: boolean;
+  group: string;
+  parameterized: boolean;
 }
 let tasks: Array<TaskInterface> = [];
 let fetched: boolean;
@@ -31,7 +31,10 @@ export class TasksApi {
     const loader = new Loader();
     loader.setShow();
     try {
-      const tasksResponse = await fetch(this.url, requestParam);
+      const tasksResponse = await fetch(
+        `${this.url}?active=true`,
+        requestParam
+      );
       loader.setHide();
       if (tasksResponse.ok) {
         const fetchedTasks: Array<TaskInterface> = await tasksResponse.json();
@@ -42,7 +45,6 @@ export class TasksApi {
           `Error connection getting tasks status ${tasksResponse.status}`
         );
       }
-      console.log(tasks);
     } catch (e) {
       loader.setHide();
       //handle error
@@ -51,7 +53,7 @@ export class TasksApi {
   getAll(): Array<TaskInterface> {
     return tasks;
   }
-  get(id: number): TaskInterface | undefined {
+  get(id: string): TaskInterface | undefined {
     return tasks.find((task) => task.id === id);
   }
 }
@@ -80,7 +82,7 @@ export class RenderTasksElements {
     if (!Array.isArray(tasksArr)) return;
 
     tasksArr.forEach((el) => {
-      types[el.type] = "";
+      types[el.group] = "";
     });
     for (let type in types) {
       ouptut.push(type);
@@ -90,6 +92,7 @@ export class RenderTasksElements {
 
   addOptions(tasksArr: Array<TaskInterface>) {
     if (!Array.isArray(tasksArr)) return;
+    //todo
 
     const types = this.getTypes(tasksArr);
 
@@ -97,7 +100,7 @@ export class RenderTasksElements {
       const optgroup = document.createElement("optgroup");
       optgroup.setAttribute("label", type || "brak");
       tasksArr.forEach((task) => {
-        if (task.type === type) {
+        if (task.group === type) {
           const optionElement = this.createElement("option");
           optionElement.setAttribute("value", String(task.id));
           optionElement.innerText = task.name;

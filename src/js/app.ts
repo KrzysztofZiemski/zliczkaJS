@@ -16,6 +16,7 @@ class App {
   dateHandler: DateHandler;
   report: Reports;
   favouriteTasks: FavouriteTasks;
+
   constructor() {
     this.tasks = new TasksApi();
     this.report = new Reports();
@@ -24,11 +25,13 @@ class App {
       document.querySelector("#selectTasks")
     );
     this.dateHandler = new DateHandler(document.querySelector("#date-panel"));
+
     this.init();
   }
+
   async init() {
     await this.tasks.fetch();
-    await this.report.fetch(this.dateHandler.getDate());
+    await this.report.fetch(this.dateHandler.getDateFormat());
     this.taskElementCreator.addOptions(this.tasks.getAll());
     this.favouriteTasks.render();
 
@@ -53,12 +56,17 @@ class App {
     document
       .querySelector("#save-report")
       .addEventListener("click", this.saveReport.bind(this));
+    document
+      .querySelector("textarea[name='description']")
+      .addEventListener("change", this.handleReportComment.bind(this));
 
     window.onbeforeunload = function () {
       return "Czy na pewno chcesz wyjść ze strony? Sprawdź czy zmiany są zapisane";
     };
   }
-
+  handleReportComment(e) {
+    new Reports().comment(e.target.value);
+  }
   warningExitPage(e: Event) {
     return "są niezapisane zmiany";
   }
@@ -73,9 +81,9 @@ class App {
 
   changeDashboard(e: Event) {
     // @ts-ignore: Unreachable code error
-    const value: number = Number(e.target.value);
+    const value: number = e.target.value;
     // @ts-ignore: Unreachable code error
-    const id: number = Number(e.target.dataset.id);
+    const id: string = e.target.dataset.id;
     // @ts-ignore: Unreachable code error
     //ONE OF TYPE_FIELD_REPORT
     const type: string = e.target.dataset.type;
@@ -93,12 +101,16 @@ class App {
 
   addTaskToReport(e: Event) {
     e.preventDefault();
-    const idTask = Number(this.taskElementCreator.getContainer().value);
+    const idTask = this.taskElementCreator.getContainer().value;
+
     const addedTask: TaskInterface = this.tasks.get(idTask);
-    const { id, name, isParameterized } = addedTask;
+
+    const { id, name, parameterized } = addedTask;
+
+    //TODO
     this.favouriteTasks.add(addedTask);
-    console.log(this.favouriteTasks.getTop());
-    this.report.add(id, name, isParameterized);
+
+    this.report.add(id, name, parameterized, addedTask.intensityTime);
     this.renderDashboard();
   }
 }

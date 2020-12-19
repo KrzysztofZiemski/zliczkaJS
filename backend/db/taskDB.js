@@ -5,12 +5,7 @@ class TaskModel {
     constructor() {
 
     }
-    // update(id, filters) {
-    //     return User.findOneAndUpdate({ _id: id }, filters);
-    // }
-    // async removeUser(id) {
-    //     return User.findOneAndUpdate({ _id: id }, { active: false });
-    // }
+
     update(id, filters) {
         const { group, active, intensityTime, name, parameterized } = filters;
         return Task.findOneAndUpdate({ _id: id }, { group, active, intensityTime, name, parameterized });
@@ -21,9 +16,9 @@ class TaskModel {
     getAll() {
         return Task.find()
     }
-    // getBy(filters) {
-    //     return User.find(filters)
-    // }
+    getBy(filters) {
+        return Task.find(filters)
+    }
 }
 
 

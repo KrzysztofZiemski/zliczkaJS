@@ -5,73 +5,6 @@ const { PERMISSION } = require('../consts');
 const checkPermission = require('../middlewares/authMiddleware')
 const TaskController = require('../constrollers/taskController');
 
-
-// const fakeResponse = [
-//     {
-//         id: 1,
-//         name: 'Zarchiwizowane dokumenty',
-//         type: 'dokumenty',
-//         isParameterized: true,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120, //in seconds?
-//     },
-//     {
-//         id: 2,
-//         name: 'Przygotowanie dokumentów do wypożyczenia',
-//         type: 'dokumenty',
-//         isParameterized: true,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120,
-//     },
-//     {
-//         id: 3,
-//         type: 'Apex',
-//         name: 'Weryfikacja wysyłki',
-//         isParameterized: false,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120,
-//     },
-//     {
-//         id: 4,
-//         name: 'Zatwierdzanie wypożyczeń',
-//         type: 'Indo',
-//         isParameterized: true,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120,
-//     },
-//     {
-//         id: 5,
-//         name: 'Wysyłka kart',
-//         type: 'karty',
-//         isParameterized: true,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120,
-//     },
-//     {
-//         id: 6,
-//         name: 'Niszczenie kart',
-//         type: 'karty',
-//         isParameterized: true,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120,
-//     },
-//     {
-//         id: 7,
-//         name: 'dfgr',
-//         type: 'Apex',
-//         isParameterized: false,
-//         lastActive: new Date(),
-//         active: true,
-//         intensityTime: 120,
-//     }
-// ]
-
 const validateTask = (task) => {
     let isOk = true;
     if (typeof task.name !== 'string' || task.name.length < 3) isOk = false;
@@ -95,8 +28,12 @@ class TasksRouter {
     }
 
     async getAll(req, res) {
+        const active = req.query.active;
         try {
-            const tasks = await new TaskController().getAll()
+            let tasks;
+            if (active === 'true') tasks = await new TaskController().getActive()
+            if (active !== 'true') tasks = await new TaskController().getAll()
+
             res.status(200).json(tasks)
         } catch (err) {
             res.status(err.status || 500).json(err)

@@ -1,34 +1,15 @@
 
 const express = require('express');
 const path = require('path');
+const ReportController = require('../constrollers/reportController');
+const { PERMISSION } = require('../consts');
+const checkPermission = require('../middlewares/authMiddleware')
 
-const fakeResponse =
-{
-    idReport: 111,
-    userId: 321,
-    description: 'jakiś opis',
-    date: new Date(),
-    tasks: [
-        {
-            id: 1,
-            name: 'Zarchiwizowane dokumenty',
-            isParameterized: true,
-            count: 3,
-        },
-        {
-            id: 2,
-            name: 'Przygotowanie dokumentów do wypożyczenia',
-            isParameterized: true,
-            count: 31,
-        },
-        {
-            id: 3,
-            name: 'Weryfikacja wysyłki',
-            isParameterized: false,
-            count: 31,
-            time: 123
-        },
-    ]
+
+const checkFormatDate = (dateString) => {
+    const regExpDate = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/
+    const match = dateString.match(regExpDate)
+    return match ? true : false
 }
 //todo cały router
 class ReportsRouter {
@@ -38,32 +19,67 @@ class ReportsRouter {
     }
     // /api/reports
     routes() {
-        // this.router.get('/', this.getAll);
-        this.router.get('/:date', this.get.bind(this));
-        this.router.post('/', this.add.bind(this));
-        this.router.put('/:idReport', this.update.bind(this));
+        this.router.get('/create/:date', checkPermission(PERMISSION.USER), this.create.bind(this));
+        this.router.get('/:date', checkPermission(PERMISSION.USER), this.getSelf.bind(this));
+        this.router.post('/', checkPermission(PERMISSION.USER), this.addSelf.bind(this));
+        this.router.put('/:idReport', checkPermission(PERMISSION.USER), this.updateSelf.bind(this));
     }
 
     getAll = (req, res) => {
         res.status(200).json(fakeResponse)
+    }
+    async create(req, res) {
+        const dateString = req.params.date;
+        const idUser = req.token.id;
+        if (!dateString) return res.status(400).send('required date param');
+        const isOk = checkFormatDate(dateString);
+        if (!isOk) return res.status(400).send('invalid data format');
+        try {
+            const response = await new ReportController().createReport(idUser, dateString)
+            res.status(200).json(response)
+        } catch (err) {
+            res.status = err.status || 500;
+            res.send('błąd podczas tworzenia raportu')
+        }
+
+
+    }
+    async getSelf(req, res) {
+        try {
+            const dateString = req.params.date;
+            const idUser = req.token.id
+
+            if (!dateString) return res.status(400).send('required date param');
+            const isOk = checkFormatDate(dateString);
+            if (!isOk) return res.status(400).send('invalid data format');
+            const response = await new ReportController().getUserReport(idUser, dateString)
+
+            if (response.length === 0) return res.status(204).send()
+            return res.status(200).send(response[0])
+        } catch (err) {
+            console.log(err)
+        }
+
 
     }
 
-    get(req, res) {
-        const date = req.params.date //format in milisecunds
-        //todo if no report yet, create new
-        res.status(200).json(fakeResponse)
-
+    async updateSelf(req, res) {
+        try {
+            const reportId = req.params.idReport;
+            if (!reportId) return res.status(400).json('wymagany id raportu')
+            const data = req.body;
+            //TODO VALIDATE BODY
+            const response = await new ReportController().update(reportId, data)
+            res.status(200).json(response)
+        } catch (err) {
+            console.log(err)
+            res.status(err.status || 500).send('nie udało się zaktualizować raportu')
+        }
 
     }
 
-    update(req, res) {
-        const date = req.params.idReport;
-        res.status(200).send('ok')
-    }
+    addSelf(req, res) {
 
-    add(req, res) {
-        console.log(req.body);
     }
     // async add(req, res) {
     //     const data = req.body;
