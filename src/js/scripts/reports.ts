@@ -46,43 +46,42 @@ export class Reports {
   }
 
   async fetch(date: string): Promise<void> {
-    const loader = new Loader();
     this.isLoading = true;
-    setTimeout(() => {
-      if (this.isLoading) loader.setShow();
-    }, 500);
+
     try {
       const response = await fetch(`${this.url}/${date}`);
-
-      if (response.status === 204) {
-        const response = await fetch(`${this.url}/create/${date}`);
-        if (response.status === 200) {
-          const x = await response.json();
-          console.log(x);
-        }
-        const error = new Error();
-        error.message = `Błąd ${response.status}`;
-        throw error;
-      } else if (response.status === 200) {
+      if (response.status === 200) {
         fetched = true;
         const fetchedReport: ReportInterface = await response.json();
         report = fetchedReport;
         saved = true;
+      } else if (response.status === 204) {
+        const response = await fetch(`${this.url}/create/${date}`);
+
+        if (response.status === 200) {
+          fetched = true;
+          const fetchedReport: ReportInterface = await response.json();
+          report = fetchedReport;
+          saved = true;
+          return;
+        }
+        const error = new Error();
+        error.message = `Błąd ${response.status}`;
+        throw error;
       } else {
         const error = new Error(`Błąd ${response.status}`);
         error.message = `Błąd ${response.status}`;
         throw error;
       }
       this.isLoading = false;
-      loader.setHide();
     } catch (err) {
       this.isLoading = false;
-      loader.setHide();
 
       new Message().set(
         "Błąd podczas pobierania zadań - spróbuj za chwilę",
         `${err.message}`
       );
+      return Promise.reject();
     }
   }
 

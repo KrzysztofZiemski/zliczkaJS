@@ -20,7 +20,6 @@ class ReportController {
 
             return { id: _id, userId, description, date, tasks, confirmed, ...other }
         } catch (err) {
-            console.log(err)
             const error = new Error(err.message || err)
             error.status = err.status || 500;
             throw error;
@@ -36,7 +35,6 @@ class ReportController {
         })
         clearedData.forEach(element => {
             element.tasks = element.tasks.map(task => {
-                console.log(task)
                 const { taskId, name, count, time, intensityTime, ...other } = task
                 return { taskId, name, count, time, intensityTime }
             })

@@ -1,3 +1,4 @@
+import { Message } from "./scripts/message";
 // import "../style/tailwind.css";
 //tymc\zsowo wyłączyłem style
 import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
@@ -72,11 +73,15 @@ class App {
   }
 
   async saveReport() {
-    const ok: boolean = window.confirm("Czy wysłać raport?");
-    if (ok) {
+    try {
       await this.report.save();
       this.renderDashboard();
+      new Message().set("Zapisano");
+    } catch (err) {
+      new Message().set("Błąd podczas zapisywania", err.message || "");
     }
+
+    // }
   }
 
   changeDashboard(e: Event) {
@@ -94,9 +99,18 @@ class App {
   renderDashboard() {
     new RenderReportsElements().render();
   }
-  getNewRaport(e: Event) {
+  async getNewRaport(e: Event) {
     e.preventDefault();
-    console.log("event zmieniam date", e);
+    const isSavedReport = this.report.isSaved();
+    let ok: boolean = true;
+    if (!isSavedReport) {
+      ok = window.confirm(
+        "Niezapisane zmiany w raporcie. Pobranie nowego dnia spowoduje utratę danych. Czy pobrać nowy dzień?"
+      );
+    }
+    if (!ok) return;
+    await this.report.fetch(this.dateHandler.getDateFormat());
+    this.renderDashboard();
   }
 
   addTaskToReport(e: Event) {

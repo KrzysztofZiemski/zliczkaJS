@@ -46,9 +46,10 @@ class ReportsRouter {
     }
     async getSelf(req, res) {
         try {
+
             const dateString = req.params.date;
             const idUser = req.token.id
-
+            console.log('weszło', req.params.date)
             if (!dateString) return res.status(400).send('required date param');
             const isOk = checkFormatDate(dateString);
             if (!isOk) return res.status(400).send('invalid data format');
