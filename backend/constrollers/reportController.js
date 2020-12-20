@@ -26,9 +26,7 @@ class ReportController {
         }
     }
 
-    async getUserReport(id, dateString) {
-        const date = new Date(dateString)
-
+    async getUserReport(id, date) {
         const response = await this.reportModel.getBy({ userId: id, date: date })
 
         const clearedData = response.map(el => {
@@ -45,7 +43,7 @@ class ReportController {
         return clearedData
     }
 
-    async update(id, data) {
+    async update(idReport, data) {
 
         data.date = new Date(data.date)
         data.updated = new Date();
@@ -56,8 +54,9 @@ class ReportController {
             return ({ name, parametrized, taskId, count, time: time || null, intensityTime: intensityTime, })
 
         })
+        const { id, ...other } = data;
 
-        return this.reportModel.update(id, data)
+        return this.reportModel.update(idReport, other)
     }
 
 }

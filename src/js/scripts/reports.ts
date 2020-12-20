@@ -29,7 +29,7 @@ export interface ReportInterface {
   id: string;
   userId: string;
   description: string;
-  date: Date;
+  date: string;
   tasks: Array<TaskReportInterface>;
   confirmed: boolean;
 }
@@ -89,8 +89,9 @@ export class Reports {
   isSaved(): boolean {
     return saved;
   }
-
   async save(): Promise<Response> {
+    report.date = report.date.slice(0, 10);
+    console.log(typeof report.date);
     const options = {
       method: "PUT",
       body: JSON.stringify(report),
@@ -217,7 +218,7 @@ export class RenderReportsElements {
     const caption: HTMLTableCaptionElement = document.createElement("caption");
     caption.setAttribute(
       "class",
-      `p-3 w-full rounded-t-lg bg-blue-500 rounded-t-lg font-bold`
+      `p-3 w-full rounded-t-lg bg-blue-800 text-lg text-white rounded-t-lg font-bold`
     );
     caption.innerText = `Zadania z dnia ${getStringData(date)}`;
     this.container.append(caption);
@@ -229,7 +230,7 @@ export class RenderReportsElements {
   private createThead() {
     const thead: HTMLElement = document.createElement("thead");
     const tr: HTMLTableRowElement = document.createElement("tr");
-    tr.setAttribute("class", "bg-gray-400");
+    tr.setAttribute("class", "");
     headers.forEach((headerString) => {
       const th: HTMLTableHeaderCellElement = this.createTh(headerString);
 
@@ -241,17 +242,21 @@ export class RenderReportsElements {
 
   private createTh(name: string): HTMLTableHeaderCellElement {
     const th = document.createElement("th");
-    th.setAttribute("class", "p-4 text-center");
+    th.setAttribute(
+      "class",
+      "px-6 py-6 border-b-2 border-gray-300 text-left text-lg leading-4 text-blue-500 tracking-wider"
+    );
     th.innerText = name;
     return th;
   }
 
   private createInput() {
     const input: HTMLInputElement = document.createElement("input");
+    input.setAttribute("min", "0");
     input.setAttribute("type", "number");
     input.setAttribute(
       "class",
-      "text-center w-14 border border-gray-300 rounded-lg"
+      "text-center w-14 border border-gray-300 rounded-lg text-xl"
     );
     return input;
   }
@@ -268,28 +273,38 @@ export class RenderReportsElements {
     reports.forEach(({ name, count, time, taskId: id }, index) => {
       //create tr
       const tr = document.createElement("tr");
-      const classTr =
-        index % 2
-          ? "bg-gray-300 m-4 text-center"
-          : "bg-gray-200 m-4 text-center";
+      const classTr = index % 2 ? "bg-gray-100 m-4 " : "bg-gray-200 m-4";
       tr.setAttribute("class", classTr);
 
       //create td name
       const tdName = document.createElement("td");
       tdName.innerText = name;
-      tdName.setAttribute("class", "p-4 pl-20 text-left");
+      tdName.setAttribute(
+        "class",
+        "px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"
+      );
 
       //create td count
       const tdCount = document.createElement("td");
+      tdCount.setAttribute(
+        "class",
+        "px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"
+      );
       const inputCount: HTMLInputElement = this.createInput();
       inputCount.dataset.id = String(id);
       inputCount.dataset.type = TYPE_FIELD_REPORT.COUNT;
+
+      //appearance-none
 
       inputCount.value = String(count);
       tdCount.append(inputCount);
 
       //create td time
       const tdTime = document.createElement("td");
+      tdTime.setAttribute(
+        "class",
+        "px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"
+      );
       if (time || time === 0) {
         const inputTime: HTMLInputElement = this.createInput();
         inputTime.value = String(time);
@@ -298,7 +313,10 @@ export class RenderReportsElements {
         tdTime.append(inputTime);
       }
       const tdButton = document.createElement("td");
-
+      tdButton.setAttribute(
+        "class",
+        "px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"
+      );
       const button: HTMLButtonElement = document.createElement("button");
       button.setAttribute("class", "focus:outline-none");
       button.innerHTML = svgRemove;
@@ -316,13 +334,7 @@ export class RenderReportsElements {
   }
   setTable(isSaved) {
     this.container.innerHTML = null;
-    if (isSaved) {
-      this.container.classList.remove("border-blue-900");
-      this.container.classList.add("border-blue-500");
-    } else {
-      this.container.classList.remove("border-blue-500");
-      this.container.classList.add("border-blue-900");
-    }
+    this.container.classList.add("border-blue-500");
   }
   public render() {
     const reportApi = new Reports();

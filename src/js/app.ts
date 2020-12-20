@@ -93,7 +93,6 @@ class App {
     //ONE OF TYPE_FIELD_REPORT
     const type: string = e.target.dataset.type;
     this.report.change(id, value, type);
-    this.renderDashboard();
   }
 
   renderDashboard() {
