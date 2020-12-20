@@ -28,7 +28,9 @@ class ReportController {
 
     async getUserReport(id, dateString) {
         const date = new Date(dateString)
+
         const response = await this.reportModel.getBy({ userId: id, date: date })
+
         const clearedData = response.map(el => {
             const { _id, tasks, confirmed, userId, date, description, ...other } = el
             return { id: _id, tasks, confirmed, userId, date, description }

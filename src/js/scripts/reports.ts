@@ -1,6 +1,7 @@
 import { getStringData } from "./helpers";
 import { Loader } from "./loader";
 import { Message } from "./message";
+import { svgRemove } from "./svgTemoveString";
 
 const requestParam: RequestInit = {
   // credentials: "include",
@@ -201,7 +202,7 @@ export class Reports {
   }
 }
 
-const headers: Array<string> = ["zadanie", "ilość", "czas"];
+const headers: Array<string> = ["zadanie", "ilość", "czas", ""];
 
 export class RenderReportsElements {
   container: HTMLElement;
@@ -254,6 +255,10 @@ export class RenderReportsElements {
     );
     return input;
   }
+  removeTaskReport(id: string) {
+    new Reports().remove(id);
+    this.render();
+  }
 
   private createBody(reports: Array<TaskReportInterface>) {
     if (!Array.isArray(reports)) return;
@@ -292,10 +297,19 @@ export class RenderReportsElements {
         inputTime.dataset.type = TYPE_FIELD_REPORT.TIME;
         tdTime.append(inputTime);
       }
+      const tdButton = document.createElement("td");
+
+      const button: HTMLButtonElement = document.createElement("button");
+      button.setAttribute("class", "focus:outline-none");
+      button.innerHTML = svgRemove;
+
+      button.addEventListener("click", this.removeTaskReport.bind(this, id));
+      tdButton.append(button);
 
       tr.append(tdName);
       tr.append(tdCount);
       tr.append(tdTime);
+      tr.append(tdButton);
       tbody.append(tr);
     });
     this.container.append(tbody);
