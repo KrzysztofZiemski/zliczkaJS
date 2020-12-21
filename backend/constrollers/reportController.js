@@ -16,7 +16,7 @@ class ReportController {
                 throw error;
             }
             const response = await this.reportModel.insertReport(id, dateToSave);
-            const { _id, userId, description, date, tasks, confirmed, ...other } = response;
+            const { _id, userId, description, date, tasks, confirmed, parametrized, ...other } = response;
 
             return { id: _id, userId, description, date, tasks, confirmed, ...other }
         } catch (err) {
@@ -35,11 +35,12 @@ class ReportController {
         })
         clearedData.forEach(element => {
             element.tasks = element.tasks.map(task => {
-                const { taskId, name, count, time, intensityTime, ...other } = task
-                return { taskId, name, count, time, intensityTime }
+                const { taskId, name, count, time, intensityTime, parametrized, ...other } = task
+                return { taskId, name, count, time, intensityTime, parametrized }
             })
-
+            console.log('get response', element.tasks)
         });
+
         return clearedData
     }
 
@@ -47,16 +48,15 @@ class ReportController {
 
         data.date = new Date(data.date)
         data.updated = new Date();
-
+        console.log('taski przed mapowaniem', data.tasks)
         data.tasks = data.tasks.map(task => {
             const { taskId, name, parametrized, count, time, intensityTime } = task;
-
             return ({ name, parametrized, taskId, count, time: time || null, intensityTime: intensityTime, })
-
         })
-        const { id, ...other } = data;
+        console.log('taski po mapowaniu', data)
+        const { id, userId, tasks, description, updated, confirmed, ...other } = data;
 
-        return this.reportModel.update(idReport, other)
+        return this.reportModel.update(idReport, { userId, tasks, description, updated, confirmed })
     }
 
 }

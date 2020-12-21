@@ -1,4 +1,5 @@
 
+const { Console } = require('console');
 const express = require('express');
 const path = require('path');
 const ReportController = require('../constrollers/reportController');
@@ -14,19 +15,20 @@ const checkFormatDate = (dateString) => {
 }
 const validateTaskReport = (tasks) => {
     console.log(tasks)
-    // []
-    // taskId: '5fde2f79dd278e062cce6543',
-    // name: 'archiwizacja dokumentów',
-    // parametrized: true,
-    // count: 1,
-    // intensityTime: 2
+
     let isOk = true;
-    tasks.forEach(({ taskId, name, parametrized }) => {
-        if (!task.taskId) isOk = false;
+    tasks.forEach(({ taskId, name, intensityTime, parametrized }) => {
+        if (!taskId) isOk = false;
         if (!name) isOk = false;
         if (typeof parametrized !== 'boolean') isOk = false;
-    })
 
+        if (parametrized === true) {
+            if (typeof intensityTime !== 'number' || intensityTime < 0) isOk = false;
+        } else if (parametrized === false) {
+            if (typeof time !== 'number' || time < 0) isOk = false;
+        }
+    })
+    return isOk;
 }
 const validateReport = (report) => {
     const { id, tasks, userId, date, description } = report;
@@ -49,7 +51,6 @@ class ReportsRouter {
     routes() {
         this.router.get('/create/:date', checkPermission(PERMISSION.USER), this.create.bind(this));
         this.router.get('/:date', checkPermission(PERMISSION.USER), this.getSelf.bind(this));
-        this.router.post('/', checkPermission(PERMISSION.USER), this.addSelf.bind(this));
         this.router.put('/:idReport', checkPermission(PERMISSION.USER), this.updateSelf.bind(this));
     }
 
@@ -70,8 +71,6 @@ class ReportsRouter {
             res.status = err.status || 500;
             res.send('błąd podczas tworzenia raportu')
         }
-
-
     }
     async getSelf(req, res) {
         try {
@@ -100,9 +99,10 @@ class ReportsRouter {
             if (!reportId) return res.status(400).json('wymagany id raportu')
 
             const data = req.body;
+            console.log('update na wejściu', data)
             const reportIsOk = validateReport(data)
             const isOk = validateTaskReport(data.tasks)
-            console.log('isOk', isOk)
+            if (!isOk) return res.status(400).json('błędny format danych')
             //TODO VALIDATE BODY
             const response = await new ReportController().update(reportId, data)
             res.status(200).json(response)
@@ -113,13 +113,6 @@ class ReportsRouter {
 
     }
 
-    addSelf(req, res) {
-
-    }
-    // async add(req, res) {
-    //     const data = req.body;
-
-    // }
 }
 
 module.exports = ReportsRouter;

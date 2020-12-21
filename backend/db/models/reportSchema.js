@@ -5,7 +5,7 @@ const ObjectId = Schema.ObjectId;
 const taskReportSchema = new Schema({
     name: { type: String },
     taskId: { type: Schema.Types.ObjectId, ref: 'Task' },
-    parameterized: { type: Boolean },
+    parametrized: { type: Boolean },
     count: { type: Number },
     time: { type: Number },
     intensityTime: { type: Number }

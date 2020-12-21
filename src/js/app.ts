@@ -34,7 +34,6 @@ class App {
     await this.tasks.fetch();
     await this.report.fetch(this.dateHandler.getDateFormat());
     this.taskElementCreator.addOptions(this.tasks.getAll());
-    this.favouriteTasks.render();
 
     if (this.tasks.getAll().length > 0) this.renderDashboard();
 

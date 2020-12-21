@@ -20,7 +20,8 @@ class ReportModel {
     }
 
     update(id, data) {
-        return Report.findOneAndUpdate({ _id: id }, { ...data });
+        console.log('data db', data)
+        return Report.findOneAndUpdate({ _id: id }, data);
     }
 }
 

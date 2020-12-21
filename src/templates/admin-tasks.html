@@ -12,13 +12,13 @@
         <h1 class="self-start">Zliczka</h1>
         <ul class="flex w-full ml-36">
           <li class="ml-9">
-            <a href="/admin" class="hover:text-white">raporty</a>
+            <a href="/management" class="hover:text-white">raporty</a>
           </li>
           <li class="ml-9">
-            <a href="/admin/users" class="hover:text-white">użytkownicy</a>
+            <a href="/management/users" class="hover:text-white">użytkownicy</a>
           </li>
           <li class="ml-9">
-            <a href="/admin/tasks" class="text-white">zadania</a>
+            <a href="/management/tasks" class="text-white">zadania</a>
           </li>
         </ul>
         <div
@@ -164,7 +164,11 @@
                   </div>
                 </div>
                 <label class="flex items-center text-fm">
-                  <input type="checkbox" class="form-checkbox" id="filter-checkbox"/>
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    id="filter-checkbox"
+                  />
                   <span class="ml-2">pokaż nieaktywne</span>
                 </label>
               </div>
@@ -244,7 +248,5 @@
         </button>
       </div>
     </div>
-
-    <script src="../adminTasks.min.js"></script>
   </body>
 </html>

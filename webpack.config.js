@@ -83,19 +83,19 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'zliczka_admin',
             template: path.resolve(__dirname, './src/templates/admin.html'),
-            filename: 'admin.html',
+            filename: 'management/admin.html',
             chunks: ['admin'],
         }),
         new HtmlWebpackPlugin({
             title: 'zliczka_admin-users',
             template: path.resolve(__dirname, './src/templates/admin-users.html'),
-            filename: 'admin-users.html',
+            filename: 'management/admin-users.html',
             chunks: ['adminUsers'],
         }),
         new HtmlWebpackPlugin({
             title: 'zliczka_admin-tasks',
             template: path.resolve(__dirname, './src/templates/admin-tasks.html'),
-            filename: 'admin-tasks.html',
+            filename: 'management/admin-tasks.html',
             chunks: ['adminTasks'],
         })
     ],
@@ -104,7 +104,7 @@ module.exports = {
         minimizer: [
             // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
             // `...`
-            new CssMinimizerPlugin()
+            // new CssMinimizerPlugin()
         ],
     },
 }

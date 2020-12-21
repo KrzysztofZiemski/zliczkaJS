@@ -9,11 +9,7 @@ import { Loader } from "./scripts/loader";
 import { Message } from "./scripts/message";
 
 class AppUsers {
-  addEmployeeForm: HTMLFormElement;
-
   constructor() {
-    this.addEmployeeForm = document.querySelector("#add-user-form");
-
     this.addListeners();
     this.handleEmployeesList();
   }
@@ -23,10 +19,9 @@ class AppUsers {
   }
 
   addListeners(): void {
-    this.addEmployeeForm.addEventListener(
-      "submit",
-      this.handleAddEmployee.bind(this)
-    );
+    document
+      .querySelector("#add-user-form")
+      .addEventListener("submit", this.handleAddEmployee.bind(this));
   }
   renderTable() {
     new TableEmployees().render();

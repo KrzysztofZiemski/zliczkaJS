@@ -10,6 +10,7 @@ class UserController {
         return this.userModel.update(id, { active: true })
     }
     async addUser(user) {
+        console.log('weszło')
         user.permission = PERMISSION.USER;
         user.password = await bcrypt.hash(user.password, Number(process.env.HASH_ROUND));
         user.active = true;

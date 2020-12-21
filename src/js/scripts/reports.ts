@@ -50,11 +50,13 @@ export class Reports {
     this.isLoading = true;
 
     try {
+      console.log("fetching date", date);
       const response = await fetch(`${this.url}/${date}`);
       if (response.status === 200) {
         fetched = true;
         const fetchedReport: ReportInterface = await response.json();
         report = fetchedReport;
+        console.log("fetched report", fetchedReport);
         saved = true;
       } else if (response.status === 204) {
         const response = await fetch(`${this.url}/create/${date}`);
@@ -91,12 +93,12 @@ export class Reports {
   }
   async save(): Promise<Response> {
     report.date = report.date.slice(0, 10);
-    console.log(typeof report.date);
+
     const options = {
       method: "PUT",
       body: JSON.stringify(report),
     };
-
+    console.log("wysyłam do zapisu", report);
     const loader = new Loader();
 
     this.isLoading = true;
@@ -141,6 +143,7 @@ export class Reports {
     if (doubledItem !== undefined) {
       //TODO addition count++ or not?
     } else {
+      console.log("parametrized", parametrized);
       let newItem: TaskReportInterface;
       parametrized
         ? (newItem = {
@@ -159,6 +162,7 @@ export class Reports {
           });
 
       report.tasks.push(newItem);
+      console.log("afret added item", "item", newItem, "report", report.tasks);
     }
   }
   remove(id: string) {

@@ -13,15 +13,18 @@ class TemplatesRouter {
     routes() {
         this.router.get('/management/users', checkPermission(10), this.adminUsers);
         this.router.get('/management/tasks', checkPermission(10), this.adminTasks);
+        this.router.get('/management', checkPermission(10), this.admin);
         this.router.get('/management/*', checkPermission(10), this.admin);
         this.router.get('/dashboard/*', checkPermission(1), this.dashboard);
         this.router.get('/', checkPermission(), this.redirect);
     }
+
     adminTasks(req, res) {
-        res.sendFile(path.resolve(__dirname, "../../build/admin-tasks.html"));
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin-tasks.html"));
     }
     adminUsers(req, res) {
-        res.sendFile(path.resolve(__dirname, "../../build/admin-users.html"));
+        console.log('weszło')
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin-users.html"));
     }
     dashboard(req, res) {
         res.sendFile(path.resolve(__dirname, "../../build/dashboard"));
@@ -29,7 +32,7 @@ class TemplatesRouter {
 
     admin(req, res) {
         //weryfikacja tokenu
-        res.sendFile(path.resolve(__dirname, "../../build/admin.html"));
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin.html"));
     }
     redirect(req, res) {
         if (req.token.permission === PERMISSION.ADMIN) return res.redirect('/management')
