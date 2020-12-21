@@ -11,17 +11,17 @@ class TemplatesRouter {
     }
     // /
     routes() {
-        this.router.get('/admin/users', checkPermission(10), this.adminUsers);
-        this.router.get('/admin/tasks', checkPermission(10), this.adminTasks);
-        this.router.get('/admin/*', checkPermission(10), this.admin);
+        this.router.get('/management/users', checkPermission(10), this.adminUsers);
+        this.router.get('/management/tasks', checkPermission(10), this.adminTasks);
+        this.router.get('/management/*', checkPermission(10), this.admin);
         this.router.get('/dashboard/*', checkPermission(1), this.dashboard);
         this.router.get('/', checkPermission(), this.redirect);
     }
     adminTasks(req, res) {
-        res.sendFile(path.resolve(__dirname, "../../build/admin/admin-tasks.html"));
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin-tasks.html"));
     }
     adminUsers(req, res) {
-        res.sendFile(path.resolve(__dirname, "../../build/admin/admin-users.html"));
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin-users.html"));
     }
     dashboard(req, res) {
         res.sendFile(path.resolve(__dirname, "../../build/dashboard"));
@@ -29,10 +29,10 @@ class TemplatesRouter {
 
     admin(req, res) {
         //weryfikacja tokenu
-        res.sendFile(path.resolve(__dirname, "../../build/admin/admin.html"));
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin.html"));
     }
     redirect(req, res) {
-        if (req.token.permission === PERMISSION.ADMIN) return res.redirect('/admin')
+        if (req.token.permission === PERMISSION.ADMIN) return res.redirect('/management')
         if (req.token.permission === PERMISSION.USER) return res.redirect('/dashboard')
     }
 }
