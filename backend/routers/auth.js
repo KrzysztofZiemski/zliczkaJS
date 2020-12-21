@@ -19,7 +19,7 @@ class AuthRouter {
             const response = await new AuthController().auth(login, password)
             res.cookie('token', response.token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 8 }).status(200)
             if (PERMISSION.ADMIN) return res.redirect('/management')
-            if (PERMISSION.USER) return res.redirect('/')
+            if (PERMISSION.USER) return res.redirect('/dashboard')
 
         } catch (err) {
             res.status(err.status || 500).json(err)
