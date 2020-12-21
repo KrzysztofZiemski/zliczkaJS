@@ -83,19 +83,19 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'zliczka_admin',
             template: path.resolve(__dirname, './src/templates/admin.html'),
-            filename: '/admin/admin.html',
+            filename: '/management/admin.html',
             chunks: ['admin'],
         }),
         new HtmlWebpackPlugin({
             title: 'zliczka_admin-users',
             template: path.resolve(__dirname, './src/templates/admin-users.html'),
-            filename: '/admin/admin-users.html',
+            filename: '/management/admin-users.html',
             chunks: ['adminUsers'],
         }),
         new HtmlWebpackPlugin({
             title: 'zliczka_admin-tasks',
             template: path.resolve(__dirname, './src/templates/admin-tasks.html'),
-            filename: '/admin/admin-tasks.html',
+            filename: '/management/admin-tasks.html',
             chunks: ['adminTasks'],
         })
     ],
