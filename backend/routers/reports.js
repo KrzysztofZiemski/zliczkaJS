@@ -12,34 +12,21 @@ const checkFormatDate = (dateString) => {
     const match = dateString.match(regExpDate)
     return match ? true : false
 }
-const validateTaskReport = () => {
-    //     id: '5fdf3c8858979234489f2bbb',
-    //     tasks: [
-    //       {
-    //         taskId: '5fde2f79dd278e062cce6543',
-    //         name: 'archiwizacja dokumentów',
-    //         count: 1,
-    //         time: null,
-    //         intensityTime: 2
-    //       },
-    //       {
-    //         taskId: '5fde2f8cdd278e062cce6544',
-    //         name: 'akawryjne zamawianie karty',
-    //         count: 1,
-    //         time: null
-    //       },
-    //       {
-    //         taskId: '5fde2f9edd278e062cce6545',
-    //         name: 'stworzenie raportu KRI',
-    //         count: 1,
-    //         time: null
-    //       }
-    //     ],
-    //     confirmed: false,
-    //     userId: '5fd79c9cefe56b071c466934',
-    //     date: '2020-12-20T00:00:00.000Z',
-    //     description: ''
-    //   }
+const validateTaskReport = (tasks) => {
+    console.log(tasks)
+    // []
+    // taskId: '5fde2f79dd278e062cce6543',
+    // name: 'archiwizacja dokumentów',
+    // parametrized: true,
+    // count: 1,
+    // intensityTime: 2
+    let isOk = true;
+    tasks.forEach(({ taskId, name, parametrized }) => {
+        if (!task.taskId) isOk = false;
+        if (!name) isOk = false;
+        if (typeof parametrized !== 'boolean') isOk = false;
+    })
+
 }
 const validateReport = (report) => {
     const { id, tasks, userId, date, description } = report;
@@ -113,8 +100,9 @@ class ReportsRouter {
             if (!reportId) return res.status(400).json('wymagany id raportu')
 
             const data = req.body;
-            const isOk = validateReport(data)
-
+            const reportIsOk = validateReport(data)
+            const isOk = validateTaskReport(data.tasks)
+            console.log('isOk', isOk)
             //TODO VALIDATE BODY
             const response = await new ReportController().update(reportId, data)
             res.status(200).json(response)
