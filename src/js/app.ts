@@ -36,7 +36,7 @@ class App {
     this.taskElementCreator.addOptions(this.tasks.getAll());
 
     if (this.tasks.getAll().length > 0) this.renderDashboard();
-
+    this.favouriteTasks.render();
     this.addListeners();
   }
 
@@ -121,7 +121,6 @@ class App {
 
     //TODO
     this.favouriteTasks.add(addedTask);
-
     this.report.add(id, name, parameterized, addedTask.intensityTime);
     this.renderDashboard();
   }
