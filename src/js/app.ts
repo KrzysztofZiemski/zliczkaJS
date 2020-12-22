@@ -1,5 +1,5 @@
 import { Message } from "./scripts/message";
-import "../style/tailwind.css";
+// import "../style/tailwind.css";
 //tymc\zsowo wyłączyłem style
 import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
 import {
@@ -117,11 +117,11 @@ class App {
 
     const addedTask: TaskInterface = this.tasks.get(idTask);
 
-    const { id, name, parameterized } = addedTask;
+    const { id, name, parametrized } = addedTask;
 
     //TODO
     this.favouriteTasks.add(addedTask);
-    this.report.add(id, name, parameterized, addedTask.intensityTime);
+    this.report.add(id, name, parametrized, addedTask.intensityTime);
     this.renderDashboard();
   }
 }

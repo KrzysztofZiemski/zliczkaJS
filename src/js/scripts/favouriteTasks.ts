@@ -27,7 +27,13 @@ export class FavouriteTasks {
 
     return Array.isArray(favouriteId) ? favouriteId : [];
   }
-
+  remove(id: string) {
+    const tasks: Array<FavouriteTaskInterface> = this.getAll() || [];
+    const insexDeleted = tasks.findIndex((task) => task.id === id);
+    tasks.splice(insexDeleted, 1);
+    localStorage.setItem(FAVOURITE_TASK, JSON.stringify(tasks));
+    this.render();
+  }
   add(addedTask: TaskInterface) {
     const tasks: Array<FavouriteTaskInterface> = this.getAll() || [];
     const existingTask: FavouriteTaskInterface | undefined = tasks.find(
@@ -42,12 +48,12 @@ export class FavouriteTasks {
 
       tasks.push(newTask);
     } else {
-      const { name, active, intensityTime, group, parameterized } = addedTask;
+      const { name, active, intensityTime, group, parametrized } = addedTask;
       existingTask.name = addedTask.name;
       existingTask.active = active;
       existingTask.intensityTime = intensityTime;
       existingTask.group = group;
-      existingTask.parameterized = parameterized;
+      existingTask.parametrized = parametrized;
       existingTask.count++;
     }
 
@@ -59,19 +65,16 @@ export class FavouriteTasks {
   intensityTime: number;
   type: string;
   isParameterized: boolean;
-  createButton(idFavouritedTask: string) {
+  createButton(task: TaskInterface) {
     const button: HTMLButtonElement = document.createElement("button");
     button.setAttribute("class", "m-3 mr-6 shadow-lg");
 
-    const {
-      id,
-      name,
-      parameterized,
-      intensityTime,
-    }: TaskInterface = new TasksApi().get(idFavouritedTask);
+    // const task: TaskInterface = new TasksApi().get(idFavouritedTask);
+    // if (!task) return;
 
+    const { id, name, parametrized, intensityTime } = task;
     button.addEventListener("click", () => {
-      new Reports().add(id, name, parameterized);
+      new Reports().add(id, name, parametrized, intensityTime);
       new RenderReportsElements().render();
     });
 
@@ -95,16 +98,49 @@ export class FavouriteTasks {
     const li: HTMLLIElement = document.createElement("li");
     li.setAttribute("class", "flex items-center shadow-lg");
 
-    const button = this.createButton(favouriteTask.id);
+    const button = this.createButton(favouriteTask);
+    const removeButton = this.getButtonRemove(favouriteTask.id);
     li.append(button);
     li.append(this.createTextElement(favouriteTask.name));
+    li.append(removeButton);
     return li;
   }
-
+  getButtonRemove(id: string): HTMLButtonElement {
+    const button: HTMLButtonElement = document.createElement("button");
+    button.innerText = "USUŃ Z LISTY";
+    button.addEventListener("click", () => {
+      this.remove(id);
+      this.render();
+    });
+    button.setAttribute(
+      "class",
+      " bg-yellow-300 hover:bg-yellow-400 hover:text-white border border-gray-400 text-blue-700 rounded-lg uppercase m-3 mr-6 py-2 px-3 shadow-lg"
+    );
+    return button;
+  }
+  createNoActiveMessageTask(favouriteTask: FavouriteTaskInterface) {
+    const li: HTMLLIElement = document.createElement("li");
+    li.setAttribute("class", "flex items-center shadow-lg");
+    const span = this.createTextElement(favouriteTask.name);
+    span.setAttribute("class", "mx-5");
+    const span2 = this.createTextElement("zadanie nieaktywne");
+    span2.setAttribute("class", "text-red-500");
+    const button = this.getButtonRemove(favouriteTask.id);
+    li.append(button, span2, span);
+    return li;
+  }
   render() {
+    this.container.innerHTML = "";
     const favouriteTasks = this.getTop();
     const liElements: Array<HTMLLIElement> = favouriteTasks.map(
-      (favouriteTask) => this.createTask(favouriteTask)
+      (favouriteTask) => {
+        const allActiveTasks = new TasksApi()
+          .getAll()
+          .find((task) => task.id === favouriteTask.id);
+        return allActiveTasks
+          ? this.createTask(favouriteTask)
+          : this.createNoActiveMessageTask(favouriteTask);
+      }
     );
     liElements.forEach((el) => this.container.append(el));
   }

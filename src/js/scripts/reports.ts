@@ -1,7 +1,6 @@
 import { getStringData } from "./helpers";
 import { Loader } from "./loader";
 import { Message } from "./message";
-import { svgRemove } from "./svgTemoveString";
 
 const requestParam: RequestInit = {
   // credentials: "include",
@@ -143,7 +142,6 @@ export class Reports {
     if (doubledItem !== undefined) {
       //TODO addition count++ or not?
     } else {
-      console.log("parametrized", parametrized);
       let newItem: TaskReportInterface;
       parametrized
         ? (newItem = {
@@ -323,9 +321,10 @@ export class RenderReportsElements {
       );
       const button: HTMLButtonElement = document.createElement("button");
       button.setAttribute("class", "focus:outline-none");
-      // button.innerHTML = "USUŃ";
-      button.innerHTML = svgRemove;
 
+      // button.innerHTML = "USUŃ";
+      button.append(this.createSVG());
+      //tutaj
       button.addEventListener("click", this.removeTaskReport.bind(this, id));
       tdButton.append(button);
 
@@ -340,6 +339,16 @@ export class RenderReportsElements {
   setTable(isSaved) {
     this.container.innerHTML = null;
     this.container.classList.add("border-blue-500");
+  }
+  createSVG(): SVGElement {
+    //@ts-ignore
+    const svgEl: SVGElement = document
+      .querySelector("#svg-delete")
+      .cloneNode(true);
+    svgEl.setAttribute("width", "25");
+    svgEl.setAttribute("height", "25");
+    svgEl.setAttribute("class", "fill-current hover:text-blue-600");
+    return svgEl;
   }
   public render() {
     const reportApi = new Reports();

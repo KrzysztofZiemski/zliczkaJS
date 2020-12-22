@@ -14,7 +14,7 @@ export interface TaskInterface {
   active: boolean;
   intensityTime: number;
   group: string;
-  parameterized: boolean;
+  parametrized: boolean;
 }
 let tasks: Array<TaskInterface> = [];
 let fetched: boolean;
