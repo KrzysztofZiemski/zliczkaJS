@@ -65,8 +65,6 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'style.css',
-            // chunkFilename: path.resolve(__dirname, 'build'),
-            chunkFilename: "css/styles.css",
         }),
         new HtmlWebpackPlugin({
             title: 'zliczka',
@@ -102,9 +100,7 @@ module.exports = {
     optimization: {
         minimize: true,
         minimizer: [
-            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-            // `...`
-            // new CssMinimizerPlugin()
+            new CssMinimizerPlugin(),
         ],
     },
 }

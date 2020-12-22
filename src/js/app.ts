@@ -1,6 +1,6 @@
 import { Message } from "./scripts/message";
 // import "../style/tailwind.css";
-//tymc\zsowo wyłączyłem style
+import "../style/style.css";
 import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
 import {
   Reports,
