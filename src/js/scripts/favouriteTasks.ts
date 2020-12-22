@@ -67,7 +67,10 @@ export class FavouriteTasks {
   isParameterized: boolean;
   createButton(task: TaskInterface) {
     const button: HTMLButtonElement = document.createElement("button");
-    button.setAttribute("class", "m-3 mr-6 shadow-lg");
+    button.setAttribute(
+      "class",
+      "m-3 mr-6 shadow-lg focus:outline-none focus:shadow-outline"
+    );
 
     // const task: TaskInterface = new TasksApi().get(idFavouritedTask);
     // if (!task) return;
@@ -80,7 +83,7 @@ export class FavouriteTasks {
 
     const imgElement: HTMLImageElement = document.createElement("img");
     imgElement.setAttribute("src", `${img}`);
-    imgElement.setAttribute("class", "w-9 fill-current ");
+    imgElement.setAttribute("class", "w-9 fill-current bg-transparent");
 
     button.append(imgElement);
     return button;
@@ -96,12 +99,15 @@ export class FavouriteTasks {
   }
   createTask(favouriteTask: FavouriteTaskInterface) {
     const li: HTMLLIElement = document.createElement("li");
-    li.setAttribute("class", "flex items-center shadow-lg");
+    li.setAttribute("class", "flex items-center shadow-lg justify-between");
 
     const button = this.createButton(favouriteTask);
     const removeButton = this.getButtonRemove(favouriteTask.id);
-    li.append(button);
-    li.append(this.createTextElement(favouriteTask.name));
+    const span1 = document.createElement("span");
+    span1.setAttribute("class", "flex items-center");
+    // span1.append(button);
+    span1.append(button, this.createTextElement(favouriteTask.name));
+    li.append(span1);
     li.append(removeButton);
     return li;
   }
