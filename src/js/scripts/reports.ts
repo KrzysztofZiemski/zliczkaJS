@@ -222,7 +222,7 @@ export class RenderReportsElements {
     const caption: HTMLTableCaptionElement = document.createElement("caption");
     caption.setAttribute(
       "class",
-      `p-3 w-full rounded-t-lg bg-blue-800 text-lg text-white rounded-t-lg font-bold`
+      `p-3 rounded-t-lg bg-blue-800 text-lg text-white rounded-t-lg font-bold`
     );
     caption.innerText = `Zadania z dnia ${getStringData(date)}`;
     this.container.append(caption);
@@ -323,6 +323,7 @@ export class RenderReportsElements {
       );
       const button: HTMLButtonElement = document.createElement("button");
       button.setAttribute("class", "focus:outline-none");
+      // button.innerHTML = "USUŃ";
       button.innerHTML = svgRemove;
 
       button.addEventListener("click", this.removeTaskReport.bind(this, id));
