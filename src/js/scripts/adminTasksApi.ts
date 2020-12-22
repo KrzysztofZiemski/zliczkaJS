@@ -37,7 +37,6 @@ export class AdminTasks {
   }
   public async update(id: string) {
     const data = tasks.find((task) => task.id === id);
-    console.log(data);
     const response = await fetch(`${this.url}/${id}`, {
       method: "PUT",
       credentials: "include",

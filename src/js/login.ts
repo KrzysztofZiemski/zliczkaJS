@@ -24,6 +24,7 @@ class Login {
       // this.enableFields();
       return alert("uzupełnij login i hasło");
     }
+
     // @ts-ignore: Unreachable code error
     this.login(this.form.elements[0].value, this.form.elements[1].value);
   }

@@ -14,7 +14,6 @@ const checkFormatDate = (dateString) => {
     return match ? true : false
 }
 const validateTaskReport = (tasks) => {
-    console.log(tasks)
 
     let isOk = true;
     tasks.forEach(({ taskId, name, intensityTime, parametrized }) => {
@@ -99,7 +98,6 @@ class ReportsRouter {
             if (!reportId) return res.status(400).json('wymagany id raportu')
 
             const data = req.body;
-            console.log('update na wejściu', data)
             const reportIsOk = validateReport(data)
             const isOk = validateTaskReport(data.tasks)
             if (!isOk) return res.status(400).json('błędny format danych')
@@ -107,7 +105,6 @@ class ReportsRouter {
             const response = await new ReportController().update(reportId, data)
             res.status(200).json(response)
         } catch (err) {
-            console.log(err)
             res.status(err.status || 500).send('nie udało się zaktualizować raportu')
         }
 

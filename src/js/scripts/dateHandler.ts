@@ -30,7 +30,5 @@ export class DateHandler {
   change(e: Event): void {
     // @ts-ignore
     this.date = new Date(e.target.value);
-    console.log(this.date);
-    console.log("po", this.getDateFormat());
   }
 }

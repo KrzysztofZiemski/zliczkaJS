@@ -1,7 +1,7 @@
 const express = require('express');
 const AuthController = require('../constrollers/authController');
 const { PERMISSION } = require('../consts');
-
+const EXPIRE_COOKIE = 28800000; //8 hour
 class AuthRouter {
     constructor() {
         this.router = express.Router();
@@ -17,7 +17,8 @@ class AuthRouter {
         try {
             const { login, password } = req.body;
             const response = await new AuthController().auth(login, password)
-            res.cookie('token', response.token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 8 }).status(200)
+            const dateExpired = Date.now() + EXPIRE_COOKIE;
+            res.cookie('token', response.token, { httpOnly: true, maxAge: EXPIRE_COOKIE }).status(200)
             if (PERMISSION.ADMIN === response.permission) return res.redirect('/management')
             if (PERMISSION.USER === response.permission) return res.redirect('/dashboard')
 

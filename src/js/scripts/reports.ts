@@ -49,13 +49,11 @@ export class Reports {
     this.isLoading = true;
 
     try {
-      console.log("fetching date", date);
       const response = await fetch(`${this.url}/${date}`);
       if (response.status === 200) {
         fetched = true;
         const fetchedReport: ReportInterface = await response.json();
         report = fetchedReport;
-        console.log("fetched report", fetchedReport);
         saved = true;
       } else if (response.status === 204) {
         const response = await fetch(`${this.url}/create/${date}`);
@@ -97,7 +95,6 @@ export class Reports {
       method: "PUT",
       body: JSON.stringify(report),
     };
-    console.log("wysyłam do zapisu", report);
     const loader = new Loader();
 
     this.isLoading = true;
@@ -160,7 +157,6 @@ export class Reports {
           });
 
       report.tasks.push(newItem);
-      console.log("afret added item", "item", newItem, "report", report.tasks);
     }
   }
   remove(id: string) {
@@ -189,7 +185,6 @@ export class Reports {
   }
   comment(value: string) {
     report.description = value;
-    console.log(report);
   }
   getAll() {
     if (!report) return;

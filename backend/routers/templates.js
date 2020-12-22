@@ -23,7 +23,6 @@ class TemplatesRouter {
         res.sendFile(path.resolve(__dirname, "../../build/management/admin-tasks.html"));
     }
     adminUsers(req, res) {
-        console.log('weszło')
         res.sendFile(path.resolve(__dirname, "../../build/management/admin-users.html"));
     }
     dashboard(req, res) {

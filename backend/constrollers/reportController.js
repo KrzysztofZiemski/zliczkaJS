@@ -38,7 +38,6 @@ class ReportController {
                 const { taskId, name, count, time, intensityTime, parametrized, ...other } = task
                 return { taskId, name, count, time, intensityTime, parametrized }
             })
-            console.log('get response', element.tasks)
         });
 
         return clearedData
@@ -48,12 +47,10 @@ class ReportController {
 
         data.date = new Date(data.date)
         data.updated = new Date();
-        console.log('taski przed mapowaniem', data.tasks)
         data.tasks = data.tasks.map(task => {
             const { taskId, name, parametrized, count, time, intensityTime } = task;
             return ({ name, parametrized, taskId, count, time: time || null, intensityTime: intensityTime, })
         })
-        console.log('taski po mapowaniu', data)
         const { id, userId, tasks, description, updated, confirmed, ...other } = data;
 
         return this.reportModel.update(idReport, { userId, tasks, description, updated, confirmed })

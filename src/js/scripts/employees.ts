@@ -112,7 +112,6 @@ export class TableEmployees {
       if (this.filterCheckbox.checked) {
         return stringMatch;
       } else {
-        console.log("weszło", stringMatch);
         return stringMatch && active;
       }
     });

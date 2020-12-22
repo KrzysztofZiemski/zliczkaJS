@@ -60,7 +60,6 @@ class UserRouter {
                 created: responseUser.created
             })
         } catch (err) {
-            // console.log(err)
             res.status(err.status || 500).json(err)
         }
     }
@@ -73,7 +72,6 @@ class UserRouter {
 
             res.status(200).json(response)
         } catch (err) {
-            console.log('err', err)
             res.status(500).json(err)
         }
 
