@@ -14,19 +14,23 @@ const checkFormatDate = (dateString) => {
     return match ? true : false
 }
 const validateTaskReport = (tasks) => {
-    console.log(tasks)
+
     let isOk = true;
-    tasks.forEach(({ taskId, name, intensityTime, parametrized }) => {
+    tasks.forEach((task) => {
+        const { taskId, name, intensityTime, parametrized, time } = task
+        console.log(task)
         if (!taskId) isOk = false;
         if (!name) isOk = false;
-        // console.log(parametrized)
-        // if (typeof parametrized !== 'boolean') isOk = false;
 
-        // if (parametrized === true) {
-        //     if (typeof intensityTime !== 'number' || intensityTime < 0) isOk = false;
-        // } else if (parametrized === false) {
-        //     if (typeof time !== 'number' || time < 0) isOk = false;
-        // }
+        if (typeof parametrized !== 'boolean') isOk = false;
+
+        if (parametrized === true) {
+            if (typeof intensityTime !== 'number' || intensityTime < 0) isOk = false;
+        }
+        else if (parametrized === false) {
+            if (typeof time !== 'number' || time < 0) isOk = false;
+        }
+
     })
     return isOk;
 }
@@ -113,8 +117,6 @@ class ReportsRouter {
             const data = req.body;
             const reportIsOk = validateReport(data)
             const isOk = validateTaskReport(data.tasks)
-
-
             if (!isOk) return res.status(400).json('invalid data')
             //TODO VALIDATE BODY
             const response = await new ReportController().update(reportId, data)

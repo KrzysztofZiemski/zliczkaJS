@@ -154,7 +154,6 @@ export class Reports {
 
       report.tasks.push(newItem);
     }
-    console.log("pod dodaniu", report.tasks);
   }
   remove(id: string) {
     saved = false;
@@ -166,7 +165,7 @@ export class Reports {
   }
 
   private updateTime(id: string, value: number) {
-    this.get(id).time = value;
+    this.get(id).time = Number(value);
   }
 
   get(id: string): TaskReportInterface {
@@ -178,6 +177,7 @@ export class Reports {
       this.updateCount(id, value);
     } else if (TYPE_FIELD_REPORT.TIME) {
       this.updateTime(id, value);
+      console.log("update time", report);
     }
   }
   comment(value: string) {

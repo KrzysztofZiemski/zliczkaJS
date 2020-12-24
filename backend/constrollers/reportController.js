@@ -51,10 +51,9 @@ class ReportController {
     }
 
     async update(idReport, data) {
-        console.log('weszło controller')
+
         data.date = new Date(data.date)
         data.updated = new Date();
-        console.log('tfffffffffffffask  ')
         data.tasks = data.tasks.map(task => {
 
             const { taskId, name, parametrized, count, time, intensityTime } = task;
