@@ -9,8 +9,8 @@ const validateTask = (task) => {
     let isOk = true;
     if (typeof task.name !== 'string' || task.name.length < 3) isOk = false;
     if (typeof task.group !== 'string' || task.name.length < 2) isOk = false;
-    if (typeof task.parameterized !== 'boolean') isOk = false;
-    if (task.parameterized === true && (typeof task.intensityTime !== 'number' || task.intensityTime < 1)) isOk = false;
+    if (typeof task.parametrized !== 'boolean') isOk = false;
+    if (task.parametrized === true && (typeof task.intensityTime !== 'number' || task.intensityTime < 1)) isOk = false;
     return isOk;
 }
 

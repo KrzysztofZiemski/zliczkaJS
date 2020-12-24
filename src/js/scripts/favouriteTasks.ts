@@ -64,7 +64,7 @@ export class FavouriteTasks {
   active: boolean;
   intensityTime: number;
   type: string;
-  isParameterized: boolean;
+  isparametrized: boolean;
   createButton(task: TaskInterface) {
     const button: HTMLButtonElement = document.createElement("button");
     button.setAttribute(

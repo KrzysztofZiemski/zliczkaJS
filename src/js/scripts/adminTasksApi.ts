@@ -3,13 +3,13 @@ import { Message } from "./message";
 export interface AddTask {
   name: string;
   group: string;
-  parameterized: boolean | null;
+  parametrized: boolean | null;
   intensityTime: number | null;
 }
 export interface Task {
   name: string;
   group: string;
-  parameterized: boolean | null;
+  parametrized: boolean | null;
   intensityTime: number | null;
   active: boolean;
   id: string;
@@ -223,7 +223,7 @@ export class TableAdminTasks {
     const intensityTime = this.createTd(intensityValue);
 
     const status: HTMLTableCellElement = this.createActiveFieldTd(
-      task.parameterized ? "TAK" : "NIE"
+      task.parametrized ? "TAK" : "NIE"
     );
 
     const active: HTMLTableCellElement = this.createActiveFieldTd(
@@ -292,7 +292,7 @@ export class TableAdminTasks {
       "px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5"
     );
     const select = document.createElement("select");
-    select.value = task.parameterized ? "true" : "false";
+    select.value = task.parametrized ? "true" : "false";
     select.setAttribute(
       "class",
       "w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -399,13 +399,13 @@ export class TableAdminTasks {
     const name = this.createInputTdName(task);
     const group = this.createInputTdGroup(task);
     const intensityTime = this.createInputTdIntensityTime(task);
-    const parameterized = this.createSelectParametrized(task);
+    const parametrized = this.createSelectParametrized(task);
     const active = this.createSelectActive(task);
     const button = this.createChangeButton(task.id);
     tr.append(name);
     tr.append(group);
     tr.append(intensityTime);
-    tr.append(parameterized);
+    tr.append(parametrized);
     tr.append(active);
     tr.append(button);
     this.container.append(tr);

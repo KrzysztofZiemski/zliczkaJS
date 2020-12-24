@@ -13,7 +13,7 @@ export class AddAdminTask {
     this.data = {
       name: "",
       group: "",
-      parameterized: null,
+      parametrized: null,
       intensityTime: null,
     };
     this.addListeners();
@@ -27,7 +27,7 @@ export class AddAdminTask {
       .querySelector('input[name="group"]')
       .addEventListener("change", this.changeGroup.bind(this));
     this.form
-      .querySelector('select[name="parameterized"]')
+      .querySelector('select[name="parametrized"]')
       .addEventListener("change", this.changeParametrized.bind(this));
     this.form
       .querySelector('input[name="intensityTime"]')
@@ -59,8 +59,8 @@ export class AddAdminTask {
     let isOk = true;
     if (this.data.name.length < 3) isOk = false;
     if (this.data.group.length < 3) isOk = false;
-    if (this.data.parameterized === null) isOk = false;
-    if (this.data.parameterized === true)
+    if (this.data.parametrized === null) isOk = false;
+    if (this.data.parametrized === true)
       if (this.data.intensityTime < 1 || this.data.intensityTime === null)
         isOk = false;
 
@@ -79,10 +79,10 @@ export class AddAdminTask {
     );
 
     if (e.target.value === "true") {
-      this.data.parameterized = true;
+      this.data.parametrized = true;
       intensityTimeField.removeAttribute("disabled");
     } else {
-      this.data.parameterized = e.target.value === "false" ? false : null;
+      this.data.parametrized = e.target.value === "false" ? false : null;
       this.data.intensityTime = null;
       intensityTimeField.value = "";
       intensityTimeField.setAttribute("disabled", "disabled");

@@ -14,18 +14,19 @@ const checkFormatDate = (dateString) => {
     return match ? true : false
 }
 const validateTaskReport = (tasks) => {
-
+    console.log(tasks)
     let isOk = true;
     tasks.forEach(({ taskId, name, intensityTime, parametrized }) => {
         if (!taskId) isOk = false;
         if (!name) isOk = false;
-        if (typeof parametrized !== 'boolean') isOk = false;
+        // console.log(parametrized)
+        // if (typeof parametrized !== 'boolean') isOk = false;
 
-        if (parametrized === true) {
-            if (typeof intensityTime !== 'number' || intensityTime < 0) isOk = false;
-        } else if (parametrized === false) {
-            if (typeof time !== 'number' || time < 0) isOk = false;
-        }
+        // if (parametrized === true) {
+        //     if (typeof intensityTime !== 'number' || intensityTime < 0) isOk = false;
+        // } else if (parametrized === false) {
+        //     if (typeof time !== 'number' || time < 0) isOk = false;
+        // }
     })
     return isOk;
 }
@@ -40,6 +41,7 @@ const validateReport = (report) => {
     if (typeof description !== 'string') isOk = false;
     return isOk;
 }
+
 //todo cały router
 class ReportsRouter {
     constructor() {
@@ -50,19 +52,30 @@ class ReportsRouter {
     routes() {
         this.router.get('/create/:date', checkPermission(PERMISSION.USER), this.create.bind(this));
         this.router.get('/:date', checkPermission(PERMISSION.USER), this.getSelf.bind(this));
+        this.router.get('/', this.getAll.bind(this));//add admin middleware
         this.router.put('/:idReport', checkPermission(PERMISSION.USER), this.updateSelf.bind(this));
     }
 
-    getAll = (req, res) => {
-        res.status(200).json(fakeResponse)
+
+    async getAll(req, res) {
+        const { dateStart, dateEnd } = req.body;
+        // console.log('wejście', req.body)
+
+        const isOkDateStart = checkFormatDate(dateStart);
+        const isOkDateEnd = checkFormatDate(dateStart);
+
+        if (!isOkDateStart || !isOkDateEnd) return res.status(400).JSON('invalid data');
+
+        const response = await new ReportController().getAll(dateStart, dateEnd)
+        res.status(200).json(response)
     }
     async create(req, res) {
         const dateString = req.params.date;
         const idUser = req.token.id;
-        if (!dateString) return res.status(400).send('required date param');
+        if (!dateString) return res.status(400).send('invalid data');
         const isOk = checkFormatDate(dateString);
 
-        if (!isOk) return res.status(400).send('invalid data format');
+        if (!isOk) return res.status(400).send('invalid data');
         try {
             const response = await new ReportController().createReport(idUser, dateString)
             res.status(200).json(response)
@@ -76,10 +89,9 @@ class ReportsRouter {
             const dateString = req.params.date;
             const idUser = req.token.id
 
-            if (!dateString) return res.status(400).send('required date param');
+            if (!dateString) return res.status(400).send('invalid data');
             const isOk = checkFormatDate(dateString);
-
-            if (!isOk) return res.status(400).send('invalid data format');
+            if (!isOk) return res.status(400).send('invalid data');
             const date = new Date(dateString)
             const response = await new ReportController().getUserReport(idUser, date)
 
@@ -93,14 +105,17 @@ class ReportsRouter {
     }
 
     async updateSelf(req, res) {
+
         try {
             const reportId = req.params.idReport;
-            if (!reportId) return res.status(400).json('wymagany id raportu')
+            if (!reportId) return res.status(400).json('invalid data')
 
             const data = req.body;
             const reportIsOk = validateReport(data)
             const isOk = validateTaskReport(data.tasks)
-            if (!isOk) return res.status(400).json('błędny format danych')
+
+
+            if (!isOk) return res.status(400).json('invalid data')
             //TODO VALIDATE BODY
             const response = await new ReportController().update(reportId, data)
             res.status(200).json(response)

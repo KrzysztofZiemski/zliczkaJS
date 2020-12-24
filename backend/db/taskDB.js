@@ -7,8 +7,8 @@ class TaskModel {
     }
 
     update(id, filters) {
-        const { group, active, intensityTime, name, parameterized } = filters;
-        return Task.findOneAndUpdate({ _id: id }, { group, active, intensityTime, name, parameterized });
+        const { group, active, intensityTime, name, parametrized } = filters;
+        return Task.findOneAndUpdate({ _id: id }, { group, active, intensityTime, name, parametrized });
     }
     inserTask(task) {
         return new Task(task).save();

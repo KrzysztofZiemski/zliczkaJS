@@ -3,3 +3,4 @@ build
 changes.txt
 # backend/config.json
 package-lock.json
+debug.log

@@ -63,6 +63,7 @@ export class Reports {
           const fetchedReport: ReportInterface = await response.json();
           report = fetchedReport;
           saved = true;
+          console.log("fetch", report);
           return;
         }
         const error = new Error();
@@ -107,23 +108,18 @@ export class Reports {
         ...requestParam,
         ...options,
       });
-
-      if (response.ok) {
+      this.isLoading = false;
+      loader.setHide();
+      if (response.status === 200) {
         saved = true;
+        return response;
       } else {
         throw new Error(`${response.status}`);
       }
-      this.isLoading = false;
-      loader.setHide();
-
-      return response;
     } catch (e) {
       this.isLoading = false;
       loader.setHide();
-      new Message().set(
-        "Błąd podczas pobierania zadań - spróbuj za chwilę",
-        `Błąd ${e.message}`
-      );
+      throw new Error(`${e.status || e}`);
     }
   }
 
@@ -158,6 +154,7 @@ export class Reports {
 
       report.tasks.push(newItem);
     }
+    console.log("pod dodaniu", report.tasks);
   }
   remove(id: string) {
     saved = false;

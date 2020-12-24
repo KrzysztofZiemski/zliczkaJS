@@ -40,7 +40,28 @@
           </svg>
         </div>
       </nav>
-      <main class="flex-grow"></main>
+      <main class="flex-grow">
+        <div class="w-1/2">
+          <h2>Zakres raportu</h2>
+          <form id="dateForm" class="bg-blue-900 rounded-lg flex">
+            <label for="date-panel-start" class="">Dzień początkowy</label>
+            <input
+              type="date"
+              id="date-panel-start"
+              class="p-3 mt-4 mb-4 ml-5 w-1/3"
+            />
+            <label for="date-panel-start" class="">Dzień końcowy</label>
+            <input
+              type="date"
+              id="date-panel-end"
+              class="p-3 mt-4 mb-4 ml-5 w-1/3"
+            />
+            <button class="primmary-btn w-11/12 self-center mb-4" type="submit">
+              Przejdź
+            </button>
+          </form>
+        </div>
+      </main>
     </div>
     <div
       id="loader"

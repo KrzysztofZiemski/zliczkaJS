@@ -42,12 +42,21 @@ class ReportController {
 
         return clearedData
     }
+    async getAll(dateStart, dateEnd) {
+        const start = new Date(dateStart)
+        const end = new Date(dateEnd)
+        const filters = { date: { $gte: start, $lte: end } }
+        const response = await this.reportModel.getBy(filters)
+        return response;
+    }
 
     async update(idReport, data) {
-
+        console.log('weszło controller')
         data.date = new Date(data.date)
         data.updated = new Date();
+        console.log('tfffffffffffffask  ')
         data.tasks = data.tasks.map(task => {
+
             const { taskId, name, parametrized, count, time, intensityTime } = task;
             return ({ name, parametrized, taskId, count, time: time || null, intensityTime: intensityTime, })
         })

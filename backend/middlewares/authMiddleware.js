@@ -6,14 +6,13 @@ const checkPermission = (requiredPermission = 0) => {
         try {
             const tokenCoded = req.cookies.token;
             const token = jwt.checkHash(tokenCoded)
-            console.log(token)
+
             req.token = token;
             if (requiredPermission > token.permission) {
                 return res.status(401).redirect('/login')
             }
             if (token.dateExpired < Date.now())
                 return res.clearCookie('token', { path: '/' }).status(401).redirect('/login')
-
             next()
         } catch (err) {
             return res.status(401).redirect('/login')
