@@ -40,26 +40,55 @@
           </svg>
         </div>
       </nav>
-      <main class="flex-grow">
-        <div class="w-1/2">
-          <h2>Zakres raportu</h2>
-          <form id="dateForm" class="bg-blue-900 rounded-lg flex">
-            <label for="date-panel-start" class="">Dzień początkowy</label>
+      <main class="flex flex-grow">
+        <div class="w-full" id="container"></div>
+        <div class="min-w-min bg-blue-500">
+          <label
+            for="date-panel-start"
+            class="px-5 py-2 rounded-t-lg uppercase spacing-5 font-bold block"
+          >
+            <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
+              >początek</span
+            >
             <input
               type="date"
               id="date-panel-start"
-              class="p-3 mt-4 mb-4 ml-5 w-1/3"
+              class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <label for="date-panel-start" class="">Dzień końcowy</label>
+          </label>
+          <label
+            for="date-panel-end"
+            class="px-5 py-2 rounded-t-lg uppercase spacing-5 font-bold block"
+          >
+            <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
+              >koniec</span
+            >
             <input
               type="date"
               id="date-panel-end"
-              class="p-3 mt-4 mb-4 ml-5 w-1/3"
+              class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <button class="primmary-btn w-11/12 self-center mb-4" type="submit">
-              Przejdź
+          </label>
+
+          <label
+            class="p-5 py-9 block rounded-t-lg uppercase spacing-5 font-bold"
+            for="employeeList-select"
+          >
+            <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
+              >Wybierz pracowników</span
+            >
+            <select
+              class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="employeeList-select"
+              name="employeeList-select"
+              placeholder="raport dla"
+            >
+              <option value="all" selected>WSZYSCY</option>
+            </select>
+            <button class="primmary-btn mt-10" id="admin-report-panel-btn">
+              pobierz
             </button>
-          </form>
+          </label>
         </div>
       </main>
     </div>

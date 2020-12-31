@@ -5,7 +5,8 @@ class ReportController {
 
     constructor() {
         this.reportModel = new ReportDB();
-    }
+    };
+
     async createReport(id, dateString) {
         const dateToSave = new Date(dateString)
         try {
@@ -25,11 +26,8 @@ class ReportController {
             throw error;
         }
     }
-
-    async getUserReport(id, date) {
-        const response = await this.reportModel.getBy({ userId: id, date: date })
-
-        const clearedData = response.map(el => {
+    getRequiredData(responseFronDB) {
+        const clearedData = responseFronDB.map(el => {
             const { _id, tasks, confirmed, userId, date, description, ...other } = el
             return { id: _id, tasks, confirmed, userId, date, description }
         })
@@ -39,15 +37,22 @@ class ReportController {
                 return { taskId, name, count, time, intensityTime, parametrized }
             })
         });
-
-        return clearedData
+        return clearedData;
     }
-    async getAll(dateStart, dateEnd) {
+
+    async getUserReport(id, date) {
+        const response = await this.reportModel.getBy({ userId: id, date: date })
+        const output = this.getRequiredData(response)
+        return output;
+    }
+    async getBeteen(dateStart, dateEnd) {
         const start = new Date(dateStart)
         const end = new Date(dateEnd)
-        const filters = { date: { $gte: start, $lte: end } }
+        const filters = { date: { $gte: dateStart, $lte: dateEnd } }
+
         const response = await this.reportModel.getBy(filters)
-        return response;
+        const output = this.getRequiredData(response)
+        return output;
     }
 
     async update(idReport, data) {

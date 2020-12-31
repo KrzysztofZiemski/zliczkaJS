@@ -32,7 +32,7 @@ class App {
 
   async init() {
     await this.tasks.fetch();
-    await this.report.fetch(this.dateHandler.getDateFormat());
+    await this.report.fecthSelf(this.dateHandler.getDateFormat());
     this.taskElementCreator.addOptions(this.tasks.getAll());
 
     if (this.tasks.getAll().length > 0) this.renderDashboard();
@@ -107,7 +107,7 @@ class App {
       );
     }
     if (!ok) return;
-    await this.report.fetch(this.dateHandler.getDateFormat());
+    await this.report.fecthSelf(this.dateHandler.getDateFormat());
     this.renderDashboard();
   }
 

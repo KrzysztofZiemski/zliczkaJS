@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 const path = require("path");
 
 module.exports = {
@@ -40,6 +41,7 @@ module.exports = {
                     }
                 }
             },
+
             {
                 test: /\.css/i,
                 use: [
@@ -60,6 +62,7 @@ module.exports = {
                     },
                 ],
             },
+
         ]
     },
     plugins: [
@@ -95,12 +98,13 @@ module.exports = {
             template: path.resolve(__dirname, './src/templates/admin-tasks.html'),
             filename: 'management/admin-tasks.html',
             chunks: ['adminTasks'],
-        })
+        }),
+
     ],
     optimization: {
         minimize: true,
         minimizer: [
-            new CssMinimizerPlugin(),
+            // new CssMinimizerPlugin(), for prod
         ],
     },
 }

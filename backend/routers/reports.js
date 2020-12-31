@@ -16,9 +16,7 @@ const checkFormatDate = (dateString) => {
 const validateTaskReport = (tasks) => {
 
     let isOk = true;
-    tasks.forEach((task) => {
-        const { taskId, name, intensityTime, parametrized, time } = task
-        console.log(task)
+    tasks.forEach(({ taskId, name, intensityTime, parametrized, time }) => {
         if (!taskId) isOk = false;
         if (!name) isOk = false;
 
@@ -55,22 +53,22 @@ class ReportsRouter {
     // /api/reports
     routes() {
         this.router.get('/create/:date', checkPermission(PERMISSION.USER), this.create.bind(this));
-        this.router.get('/:date', checkPermission(PERMISSION.USER), this.getSelf.bind(this));
-        this.router.get('/', this.getAll.bind(this));//add admin middleware
+        this.router.get('/self/:date', checkPermission(PERMISSION.USER), this.getSelf.bind(this));
+        this.router.get('/filters', this.getBy.bind(this));//add admin middleware
         this.router.put('/:idReport', checkPermission(PERMISSION.USER), this.updateSelf.bind(this));
     }
 
 
-    async getAll(req, res) {
-        const { dateStart, dateEnd } = req.body;
-        // console.log('wejście', req.body)
+    async getBy(req, res) {
+        const { start, end } = req.query;
 
-        const isOkDateStart = checkFormatDate(dateStart);
-        const isOkDateEnd = checkFormatDate(dateStart);
+        const isOkDateStart = checkFormatDate(start);
+        const isOkDateEnd = checkFormatDate(end);
 
-        if (!isOkDateStart || !isOkDateEnd) return res.status(400).JSON('invalid data');
+        if (!isOkDateStart || !isOkDateEnd) return res.status(400).json('invalid data');
 
-        const response = await new ReportController().getAll(dateStart, dateEnd)
+        const response = await new ReportController().getBeteen(start, end)
+        console.log(response)
         res.status(200).json(response)
     }
     async create(req, res) {

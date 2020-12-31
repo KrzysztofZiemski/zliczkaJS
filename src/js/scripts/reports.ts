@@ -44,12 +44,23 @@ export class Reports {
   constructor() {
     this.url = `../api/reports`;
   }
+  async fetchAll(dateStart, dateEnd) {
+    const response = await fetch(
+      `${this.url}/filters?start=${dateStart}&end=${dateEnd}`
+    );
+    if (response.status === 200) {
+      return response.json();
+    }
 
-  async fetch(date: string): Promise<void> {
+    throw new Error(`błąd ${response.status}`);
+    return response;
+  }
+
+  async fecthSelf(date: string): Promise<void> {
     this.isLoading = true;
 
     try {
-      const response = await fetch(`${this.url}/${date}`);
+      const response = await fetch(`${this.url}/self/${date}`);
       if (response.status === 200) {
         fetched = true;
         const fetchedReport: ReportInterface = await response.json();
@@ -63,7 +74,6 @@ export class Reports {
           const fetchedReport: ReportInterface = await response.json();
           report = fetchedReport;
           saved = true;
-          console.log("fetch", report);
           return;
         }
         const error = new Error();
@@ -177,7 +187,6 @@ export class Reports {
       this.updateCount(id, value);
     } else if (TYPE_FIELD_REPORT.TIME) {
       this.updateTime(id, value);
-      console.log("update time", report);
     }
   }
   comment(value: string) {
