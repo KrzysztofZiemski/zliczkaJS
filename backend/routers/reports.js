@@ -93,6 +93,7 @@ class ReportsRouter {
 
             if (!dateString) return res.status(400).send('invalid data');
             const isOk = checkFormatDate(dateString);
+            console.log('isOk', dateString)
             if (!isOk) return res.status(400).send('invalid data');
             const date = new Date(dateString)
             const response = await new ReportController().getUserReport(idUser, date)

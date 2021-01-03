@@ -19,6 +19,7 @@ class TaskController {
     }
     async getActive() {
         const tasks = await this.taskModel.getBy({ active: true })
+
         return tasks.map(task => {
             const { active, group, intensityTime, _id, name, parametrized, ...other } = task;
             return { active, group, intensityTime, name, parametrized, id: _id }

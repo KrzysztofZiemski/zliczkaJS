@@ -32,7 +32,10 @@ class App {
 
   async init() {
     await this.tasks.fetch();
-    await this.report.fecthSelf(this.dateHandler.getDateFormat());
+
+    const date = this.dateHandler.getDateFormat();
+    console.log("ddd", date);
+    await this.report.fecthSelf(date);
     this.taskElementCreator.addOptions(this.tasks.getAll());
 
     if (this.tasks.getAll().length > 0) this.renderDashboard();

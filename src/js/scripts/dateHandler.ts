@@ -22,7 +22,7 @@ export class DateHandler {
     const month =
       this.date.getMonth() > 8
         ? this.date.getMonth() + 1
-        : `0${this.date.getMonth()}`;
+        : `0${this.date.getMonth() + 1}`;
     const day =
       this.date.getDate() > 9 ? this.date.getDate() : `0${this.date.getDate()}`;
     return `${year}-${month}-${day}`;

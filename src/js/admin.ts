@@ -46,7 +46,7 @@ export class AdminReport {
     );
     const reports = await this.getReport(startInput.value, endInput.value);
 
-    if (reports) this.renderAdminReport(reports);
+    if (reports) this.renderReportsTable(reports);
   }
 
   async getReport(start: string, end: string) {
@@ -67,21 +67,82 @@ export class AdminReport {
   }
   renderTr() {}
 
-  renderAdminReport(reports: Array<ReportInterface>) {
+  renderReportsTable(reports: Array<ReportInterface>) {
+    //for headers
     const tableDates = {};
+
+    //for bodyTable
     const tableNamesTasks = {};
+
     reports.forEach(({ date, tasks, userId }) => {
       tableDates[date] = "";
-      
+
       tasks.forEach(({ name, count, time, intensityTime }) => {
-        tableNamesTasks[name] = "";
+        if (tableNamesTasks[name]) {
+          tableNamesTasks[name].push({ date, count, time, intensityTime });
+        } else {
+          tableNamesTasks[name] = [{ date, count, time, intensityTime }];
+        }
       });
     });
 
+    //headers
+    const dateText = (date: string) => date.slice(0, 10).replace(/-/g, "/");
     const headers = [];
-
     for (let date in tableDates) {
-      headers.push(date.slice(0, 10).replace(/-/g, "/"));
+      headers.push(dateText(date));
+    }
+    headers.sort((a, b) => {
+      const aDate = new Date(a).getTime;
+      const bDate = new Date(b).getTime;
+      if (a <= b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+
+    //body
+    const rows = [];
+    const sumRow = ["SUMA"];
+
+    for (let name in tableNamesTasks) {
+      const row = [name];
+
+      // time and count data for each header
+      for (let i = 1; i < headers.length * 2 + 1; i++) {
+        row[i] = "";
+      }
+
+      tableNamesTasks[name].forEach(({ count, date, intensityTime, time }) => {
+        const index = headers.findIndex(
+          (headerDate) => headerDate === dateText(date)
+        );
+
+        //calcule position for data(2 datas for one header date and first position is task name)
+        const useIndex = index * 2 + 1;
+
+        row[useIndex] = row[useIndex]
+          ? String(Number(row[useIndex]) + count)
+          : String(count);
+        const usedTime = intensityTime || time;
+        const addingValue = Number(usedTime) * count;
+
+        row[useIndex + 1] = row[useIndex + 1]
+          ? String(Number(row[useIndex + 1]) + addingValue)
+          : String(addingValue);
+
+        //calculation for last row summary
+        const newValueCount: string = sumRow[useIndex]
+          ? Number(sumRow[useIndex]) + count
+          : count;
+        sumRow[useIndex] = String(newValueCount);
+
+        const newValueTime: string = sumRow[useIndex + 1]
+          ? String(Number(sumRow[useIndex + 1]) + addingValue)
+          : String(addingValue);
+
+        sumRow[useIndex + 1] = newValueTime;
+      });
+      rows.push(row);
     }
 
     const tablePanel = new AdminReportTable(
@@ -89,6 +150,20 @@ export class AdminReport {
     );
 
     tablePanel.renderHeaders(headers);
+
+    rows.forEach((row) => tablePanel.renderRow(row));
+
+    const effectiveRow = [];
+    const valueTargetTime = 415;
+
+    for (let i = 2; i < sumRow.length; i = i + 2) {
+      effectiveRow.push(
+        Math.round((Number(sumRow[i]) / valueTargetTime) * 100)
+      );
+    }
+    tablePanel.renderSumRow(sumRow);
+
+    tablePanel.renderPercent(effectiveRow);
   }
 }
 

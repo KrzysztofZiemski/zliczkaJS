@@ -4,6 +4,7 @@ const path = require('path');
 const { PERMISSION } = require('../consts');
 const checkPermission = require('../middlewares/authMiddleware')
 const TaskController = require('../constrollers/taskController');
+const { Console } = require('console');
 
 const validateTask = (task) => {
     let isOk = true;
@@ -21,7 +22,7 @@ class TasksRouter {
     }
     // /api/tasks
     routes() {
-        this.router.get('/', this.getAll);
+        this.router.get('/', checkPermission(PERMISSION.USER), this.getAll);
         this.router.get('/:id', this.get.bind(this));
         this.router.put('/:id', checkPermission(PERMISSION.ADMIN), this.change.bind(this));
         this.router.post('/', checkPermission(PERMISSION.ADMIN), this.add.bind(this));
@@ -33,7 +34,6 @@ class TasksRouter {
             let tasks;
             if (active === 'true') tasks = await new TaskController().getActive()
             if (active !== 'true') tasks = await new TaskController().getAll()
-
             res.status(200).json(tasks)
         } catch (err) {
             res.status(err.status || 500).json(err)
