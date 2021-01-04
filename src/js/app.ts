@@ -1,6 +1,8 @@
 import { Message } from "./scripts/message";
 // import "../style/tailwind.css";
 import "../style/style.css";
+import { UserPanel } from "./scripts/userPanel";
+import { EmployeesApi } from "./scripts/employees";
 import { TasksApi, RenderTasksElements, TaskInterface } from "./scripts/tasks";
 import {
   Reports,
@@ -29,16 +31,24 @@ class App {
 
     this.init();
   }
-
+  async setUserPanel() {
+    try {
+      const { name, lastName } = await new EmployeesApi().getSelf();
+      new UserPanel(`${name} ${lastName}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   async init() {
     await this.tasks.fetch();
 
     const date = this.dateHandler.getDateFormat();
-    console.log("ddd", date);
+
     await this.report.fecthSelf(date);
     this.taskElementCreator.addOptions(this.tasks.getAll());
 
     if (this.tasks.getAll().length > 0) this.renderDashboard();
+    this.setUserPanel();
     this.favouriteTasks.render();
     this.addListeners();
   }

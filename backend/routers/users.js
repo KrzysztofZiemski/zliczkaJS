@@ -1,7 +1,8 @@
 
 const express = require('express');
 const path = require('path');
-const permission = require('../consts');
+const PERMISSION = require('../consts');
+const checkPermission = require('../middlewares/authMiddleware')
 const UserController = require('../constrollers/userController');
 
 class UserRouter {
@@ -14,11 +15,12 @@ class UserRouter {
     }
 
     routes() {
-        this.router.get('/employees', this.getEmployees.bind(this))
-        this.router.put('/activate/:id', this.activateUser.bind(this))
-        this.router.get('/:id', this.get.bind(this))
-        this.router.post('/', this.add.bind(this))
-        this.router.delete('/:id', this.remove.bind(this))
+        this.router.get('/employees', checkPermission(PERMISSION.ADMIN), this.getEmployees.bind(this))
+        this.router.put('/activate/:id', checkPermission(PERMISSION.ADMIN), this.activateUser.bind(this))
+        this.router.get('/self', checkPermission(PERMISSION.USER), this.getSelf.bind(this))
+        this.router.get('/:id', checkPermission(PERMISSION.ADMIN), this.get.bind(this))
+        this.router.post('/', checkPermission(PERMISSION.ADMIN), this.add.bind(this))
+        this.router.delete('/:id', checkPermission(PERMISSION.ADMIN), this.remove.bind(this))
     }
     async activateUser(req, res) {
 
@@ -29,7 +31,9 @@ class UserRouter {
             res.status(500).json(err)
         }
     }
+    get() {
 
+    }
     async remove(req, res) {
         try {
             const { active, password, permission, created, ...other } = await new UserController().removeEmployee(req.params.id);
@@ -63,7 +67,10 @@ class UserRouter {
             res.status(err.status || 500).json(err)
         }
     }
-    get(req, res) {
+    getSelf(req, res) {
+        const { name, lastName, id } = req.token
+        if (!name || !lastName || !id) return res.status(401).send('not authorized')
+        res.status(200).json({ name, lastName, id })
 
     }
     async getEmployees(req, res) {

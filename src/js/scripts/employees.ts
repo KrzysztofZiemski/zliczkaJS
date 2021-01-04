@@ -11,6 +11,11 @@ export interface GettingEmployee extends AddingEmployeeInterface {
   permission: number;
   created: string;
 }
+export interface GettingUser {
+  id: string;
+  name: string;
+  lastName: string;
+}
 
 const requestParam: RequestInit = {
   credentials: "include",
@@ -46,6 +51,22 @@ export class EmployeesApi {
       //TODO handle error
     }
   }
+  async getSelf() {
+    try {
+      const response = await fetch(`${this.url}/self`);
+      if (response.ok) {
+        const employees: GettingUser = await response.json();
+        return employees;
+      } else {
+        throw new Error(`${response.status}`);
+        //TODO handle error
+      }
+    } catch (err) {
+      throw new Error(`err`);
+      //TODO handle error
+    }
+  }
+
   public remove(id: string): Promise<Response> {
     const requestParam: RequestInit = {
       credentials: "include",

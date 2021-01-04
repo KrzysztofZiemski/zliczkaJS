@@ -5,6 +5,7 @@ import { Message } from "./scripts/message";
 import { ReportInterface } from "./scripts/reports";
 import { AdminReportTable } from "./scripts/adminReportTable";
 import { EmployeesApi, GettingEmployee } from "./scripts/employees";
+import { UserPanel } from "./scripts/userPanel";
 
 export class AdminReport {
   report: Reports;
@@ -17,6 +18,7 @@ export class AdminReport {
     this.addListeners();
     this.setDefaultDates();
     this.addEmployessList();
+    this.setUserPanel();
   }
   async addEmployessList() {
     const employesApi = new EmployeesApi();
@@ -94,7 +96,14 @@ export class AdminReport {
       message.set("Błąd podczas pobierania raportów", err);
     }
   }
-
+  async setUserPanel() {
+    try {
+      const { name, lastName } = await new EmployeesApi().getSelf();
+      new UserPanel(`${name} ${lastName}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   renderReportsTable(reports: Array<ReportInterface>) {
     if (reports.length === 0) {
       const tablePanel = new AdminReportTable(

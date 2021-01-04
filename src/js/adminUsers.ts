@@ -5,6 +5,7 @@ import {
   GettingEmployee,
   TableEmployees,
 } from "./scripts/employees";
+import { UserPanel } from "./scripts/userPanel";
 import { Loader } from "./scripts/loader";
 import { Message } from "./scripts/message";
 
@@ -12,6 +13,7 @@ class AppUsers {
   constructor() {
     this.addListeners();
     this.handleEmployeesList();
+    this.setUserPanel();
   }
   public async handleEmployeesList() {
     await new EmployeesApi().fetchAll();
@@ -26,7 +28,14 @@ class AppUsers {
   renderTable() {
     new TableEmployees().render();
   }
-
+  async setUserPanel() {
+    try {
+      const { name, lastName } = await new EmployeesApi().getSelf();
+      new UserPanel(`${name} ${lastName}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   async handleAddEmployee(e: Event) {
     e.preventDefault();
 
