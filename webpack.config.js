@@ -8,6 +8,7 @@ module.exports = {
     entry: {
         app: "./src/js/app.ts",
         login: "./src/js/login.ts",
+        logout: "./src/js/logout.ts",
         admin: "./src/js/adminReports.ts",
         adminUsers: "./src/js/adminUsers.ts",
         adminTasks: "./src/js/adminTasks.ts",
@@ -98,6 +99,12 @@ module.exports = {
             template: path.resolve(__dirname, './src/templates/admin-tasks.html'),
             filename: 'management/admin-tasks.html',
             chunks: ['adminTasks'],
+        }),
+        new HtmlWebpackPlugin({
+            title: 'zliczka_logout',
+            template: path.resolve(__dirname, './src/templates/logout.html'),
+            filename: 'logout/logout.html',
+            chunks: ['logout'],
         }),
 
     ],

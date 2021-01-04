@@ -61,7 +61,7 @@ class ReportsRouter {
 
     async getBy(req, res) {
         const { start, end, id } = req.query;
-        console.log('weszło')
+
         const isOkDateStart = checkFormatDate(start);
         const isOkDateEnd = checkFormatDate(end);
 

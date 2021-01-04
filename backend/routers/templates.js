@@ -11,6 +11,7 @@ class TemplatesRouter {
     }
     // /
     routes() {
+        this.router.get('/logout', this.logout);
         this.router.get('/management/users', checkPermission(10), this.adminUsers);
         this.router.get('/management/tasks', checkPermission(10), this.adminTasks);
         this.router.get('/management', checkPermission(10), this.admin);
@@ -18,7 +19,9 @@ class TemplatesRouter {
         this.router.get('/dashboard/*', checkPermission(1), this.dashboard);
         this.router.get('/', checkPermission(), this.redirect);
     }
-
+    logout(req, res) {
+        res.sendFile(path.resolve(__dirname, "../../build/logout/logout.html"));
+    }
     adminTasks(req, res) {
         res.sendFile(path.resolve(__dirname, "../../build/management/admin-tasks.html"));
     }

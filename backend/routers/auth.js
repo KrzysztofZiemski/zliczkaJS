@@ -11,6 +11,10 @@ class AuthRouter {
 
     routes() {
         this.router.post('/', this.login.bind(this))
+        this.router.get('/logout', this.logout.bind(this))
+    }
+    async logout(req, res) {
+        res.cookie('token', '').status(200).json('logout')
     }
 
     async login(req, res) {
@@ -25,7 +29,6 @@ class AuthRouter {
         } catch (err) {
             res.status(err.status || 500).json(err)
         }
-
     }
 }
 
