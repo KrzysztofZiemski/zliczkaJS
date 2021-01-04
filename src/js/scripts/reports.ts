@@ -44,9 +44,20 @@ export class Reports {
   constructor() {
     this.url = `../api/reports`;
   }
-  async fetchAll(dateStart, dateEnd) {
+  async fetchAll(dateStart: string, dateEnd: string) {
     const response = await fetch(
       `${this.url}/filters?start=${dateStart}&end=${dateEnd}`
+    );
+    if (response.status === 200) {
+      return response.json();
+    }
+
+    throw new Error(`błąd ${response.status}`);
+    return response;
+  }
+  async fetchByEmployee(dateStart: string, dateEnd: string, id: string) {
+    const response = await fetch(
+      `${this.url}/filters?start=${dateStart}&end=${dateEnd}&id=${id}`
     );
     if (response.status === 200) {
       return response.json();

@@ -31,7 +31,7 @@ class TemplatesRouter {
 
     admin(req, res) {
         //weryfikacja tokenu
-        res.sendFile(path.resolve(__dirname, "../../build/management/admin.html"));
+        res.sendFile(path.resolve(__dirname, "../../build/management/admin-reports.html"));
     }
     redirect(req, res) {
         if (req.token.permission === PERMISSION.ADMIN) return res.redirect('/management')

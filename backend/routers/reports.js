@@ -60,14 +60,15 @@ class ReportsRouter {
 
 
     async getBy(req, res) {
-        const { start, end } = req.query;
-
+        const { start, end, id } = req.query;
+        console.log('weszło')
         const isOkDateStart = checkFormatDate(start);
         const isOkDateEnd = checkFormatDate(end);
 
         if (!isOkDateStart || !isOkDateEnd) return res.status(400).json('invalid data');
 
-        const response = await new ReportController().getBeteen(start, end)
+        const idEmployee = id || ''
+        const response = await new ReportController().getBeteen(start, end, idEmployee)
         console.log(response)
         res.status(200).json(response)
     }
@@ -93,7 +94,7 @@ class ReportsRouter {
 
             if (!dateString) return res.status(400).send('invalid data');
             const isOk = checkFormatDate(dateString);
-            console.log('isOk', dateString)
+
             if (!isOk) return res.status(400).send('invalid data');
             const date = new Date(dateString)
             const response = await new ReportController().getUserReport(idUser, date)

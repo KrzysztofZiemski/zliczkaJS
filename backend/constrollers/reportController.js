@@ -45,10 +45,11 @@ class ReportController {
         const output = this.getRequiredData(response)
         return output;
     }
-    async getBeteen(dateStart, dateEnd) {
+    async getBeteen(dateStart, dateEnd, id) {
         const start = new Date(dateStart)
         const end = new Date(dateEnd)
-        const filters = { date: { $gte: dateStart, $lte: dateEnd } }
+
+        const filters = id ? { date: { $gte: dateStart, $lte: dateEnd }, userId: id } : { date: { $gte: dateStart, $lte: dateEnd } }
 
         const response = await this.reportModel.getBy(filters)
         const output = this.getRequiredData(response)

@@ -5,7 +5,7 @@ export class AdminReportTable {
   constructor(container: HTMLElement) {
     this.container = container;
     this.container.innerHTML = "";
-    this.container.setAttribute("class", "overflow-auto m-5");
+    this.container.setAttribute("class", "overflow-auto m-5 w-full flex-grow");
     this.init();
   }
   init() {

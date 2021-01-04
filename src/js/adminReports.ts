@@ -4,6 +4,7 @@ import { Loader } from "./scripts/loader";
 import { Message } from "./scripts/message";
 import { ReportInterface } from "./scripts/reports";
 import { AdminReportTable } from "./scripts/adminReportTable";
+import { EmployeesApi, GettingEmployee } from "./scripts/employees";
 
 export class AdminReport {
   report: Reports;
@@ -15,7 +16,26 @@ export class AdminReport {
     this.report = new Reports();
     this.addListeners();
     this.setDefaultDates();
+    this.addEmployessList();
   }
+  async addEmployessList() {
+    const employesApi = new EmployeesApi();
+    await employesApi.fetchAll();
+    const employees: Array<GettingEmployee> = employesApi.getAll();
+    employees.sort((a, b) => {
+      if (a.lastName > b.lastName) return 1;
+      if (a.lastName < b.lastName) return 1;
+      return 0;
+    });
+    const select = document.querySelector("#employeeList-select");
+    employees.forEach(({ id, name, lastName }) => {
+      const option = document.createElement("option");
+      option.value = id;
+      option.innerText = `${name} ${lastName}`;
+      select.append(option);
+    });
+  }
+
   setMessage() {
     const message = new Message();
   }
@@ -44,19 +64,28 @@ export class AdminReport {
     const endInput: HTMLInputElement = document.querySelector(
       "#date-panel-end"
     );
-    const reports = await this.getReport(startInput.value, endInput.value);
+    const employeeSelect: HTMLInputElement = document.querySelector(
+      "#employeeList-select"
+    );
+    const reports = await this.getReport(
+      startInput.value,
+      endInput.value,
+      employeeSelect.value
+    );
 
     if (reports) this.renderReportsTable(reports);
   }
 
-  async getReport(start: string, end: string) {
+  async getReport(start: string, end: string, id: string) {
     const loader = new Loader();
     loader.setShow();
     try {
-      const reports: Array<ReportInterface> = await this.report.fetchAll(
-        start,
-        end
-      );
+      ////////fetchByEmployee(dateStart: string, dateEnd: string, id: string)
+
+      const reports: Array<ReportInterface> =
+        id !== "all"
+          ? await this.report.fetchByEmployee(start, end, id)
+          : await this.report.fetchAll(start, end);
       loader.setHide();
       return reports;
     } catch (err) {
@@ -65,9 +94,16 @@ export class AdminReport {
       message.set("Błąd podczas pobierania raportów", err);
     }
   }
-  renderTr() {}
 
   renderReportsTable(reports: Array<ReportInterface>) {
+    if (reports.length === 0) {
+      const tablePanel = new AdminReportTable(
+        document.querySelector("#container")
+      );
+      tablePanel.renderRow(["brak raportów"]);
+      return;
+    }
+    const dateText = (date: string) => date.slice(0, 10).replace(/-/g, "/");
     //for headers
     const tableDates = {};
 
@@ -75,7 +111,10 @@ export class AdminReport {
     const tableNamesTasks = {};
 
     reports.forEach(({ date, tasks, userId }) => {
-      tableDates[date] = "";
+      const dateString = dateText(date);
+      tableDates[dateString] = tableDates[dateString]
+        ? tableDates[dateString] + 1
+        : 1;
 
       tasks.forEach(({ name, count, time, intensityTime }) => {
         if (tableNamesTasks[name]) {
@@ -87,7 +126,7 @@ export class AdminReport {
     });
 
     //headers
-    const dateText = (date: string) => date.slice(0, 10).replace(/-/g, "/");
+
     const headers = [];
     for (let date in tableDates) {
       headers.push(dateText(date));
@@ -131,6 +170,7 @@ export class AdminReport {
           : String(addingValue);
 
         //calculation for last row summary
+
         const newValueCount: string = sumRow[useIndex]
           ? Number(sumRow[useIndex]) + count
           : count;
@@ -154,12 +194,13 @@ export class AdminReport {
     rows.forEach((row) => tablePanel.renderRow(row));
 
     const effectiveRow = [];
-    const valueTargetTime = 415;
+    const valueTargetTimeForPerson = 415;
 
     for (let i = 2; i < sumRow.length; i = i + 2) {
-      effectiveRow.push(
-        Math.round((Number(sumRow[i]) / valueTargetTime) * 100)
-      );
+      const date = headers[i / 2 - 1 || 0];
+      const count = tableDates[date];
+      const max = valueTargetTimeForPerson * count;
+      effectiveRow.push(Math.round((Number(sumRow[i]) / max) * 100));
     }
     tablePanel.renderSumRow(sumRow);
 
