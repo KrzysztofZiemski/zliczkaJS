@@ -36,7 +36,6 @@ class UserRouter {
         if (!id) return res.status(400).send('niepoprawne dane')
         try {
             const response = await new UserController().get({ _id: id });
-            console.log('response')
             res.status(200).json(response)
         } catch (err) {
             res.status(500).json(err)

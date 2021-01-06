@@ -69,7 +69,6 @@ class ReportsRouter {
 
         const idEmployee = id || ''
         const response = await new ReportController().getBeteen(start, end, idEmployee)
-        console.log(response)
         res.status(200).json(response)
     }
     async create(req, res) {

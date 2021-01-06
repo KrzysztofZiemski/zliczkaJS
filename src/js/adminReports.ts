@@ -140,60 +140,68 @@ export class AdminReport {
       employees = employesApi.getAll();
     }
 
-    let copyReports = reports.map(async ({ userId, ...report }) => {
-      const user: GettingEmployee = employees.find(
-        (employee) => employee.id === userId
-      );
-      if (user) {
+    try {
+      let copyReports = reports.map(async ({ userId, ...report }) => {
+        const user: GettingEmployee = employees.find(
+          (employee) => employee.id === userId
+        );
+        if (user) {
+          return {
+            ...report,
+            userId,
+            name: user.name,
+            lastName: user.lastName,
+          };
+        }
+        const [userFetch]: Array<GettingEmployee> = await employesApi.get(
+          userId
+        );
+
         return {
           ...report,
           userId,
-          name: user.name,
-          lastName: user.lastName,
+          name: userFetch.name,
+          lastName: userFetch.lastName,
         };
-      }
-      const [userFetch]: Array<GettingEmployee> = await employesApi.get(userId);
+      });
+      const afterUserFetchReport: Array<any> = await Promise.all(copyReports);
+      afterUserFetchReport.sort((a, b) => {
+        const bDate = new Date(b.date).getTime;
+        const aDate = new Date(a.date).getTime;
+        if (aDate <= bDate) return -1;
+        if (aDate > bDate) return 1;
+        if (a.lastName > b.lastName) return 1;
+        if (a.lastName < b.lastName) return 1;
+        return 0;
+      });
 
-      return {
-        ...report,
-        userId,
-        name: userFetch.name,
-        lastName: userFetch.lastName,
-      };
-    });
-    const afterUserFetchReport: Array<any> = await Promise.all(copyReports);
-
-    afterUserFetchReport.sort((a, b) => {
-      const bDate = new Date(b.date).getTime;
-      const aDate = new Date(a.date).getTime;
-      if (aDate <= bDate) return -1;
-      if (aDate > bDate) return 1;
-      if (a.lastName > b.lastName) return 1;
-      if (a.lastName < b.lastName) return 1;
-      return 0;
-    });
-
-    const h2 = document.createElement("h2");
-    h2.innerText = "LISTA RAPORTÓW";
-    h2.setAttribute("class", "text-center text-lg p-3 bg-blue-900 text-white");
-    listElement.append(h2);
-
-    afterUserFetchReport.forEach(({ date, name, lastName, updated }) => {
-      const li = document.createElement("li");
-
-      const modified = this.getDateText(updated) !== this.getDateText(date);
-
-      li.innerText = `${this.getDateText(date)} - ${name} ${lastName}${
-        modified ? ` - zmodyfikowane dnia ${this.getDateText(updated)}` : ""
-      }`;
-      li.setAttribute(
+      const h2 = document.createElement("h2");
+      h2.innerText = "LISTA RAPORTÓW";
+      h2.setAttribute(
         "class",
-        `border list-none  rounded-sm px-3 py-3 ${
-          modified ? "bg-yellow-300" : ""
-        }`
+        "text-center text-lg p-3 bg-blue-900 text-white"
       );
-      listElement.append(li);
-    });
+      listElement.append(h2);
+
+      afterUserFetchReport.forEach(({ date, name, lastName, updated }) => {
+        const li = document.createElement("li");
+
+        const modified = this.getDateText(updated) !== this.getDateText(date);
+
+        li.innerText = `${this.getDateText(date)} - ${name} ${lastName}${
+          modified ? ` - zmodyfikowane dnia ${this.getDateText(updated)}` : ""
+        }`;
+        li.setAttribute(
+          "class",
+          `border list-none  rounded-sm px-3 py-3 ${
+            modified ? "bg-yellow-300" : ""
+          }`
+        );
+        listElement.append(li);
+      });
+    } catch (err) {
+      new Message().set("błąd podczas pobierania danych pracowników", err);
+    }
   }
 
   renderReportsTable(reports: Array<ReportInterface>) {
