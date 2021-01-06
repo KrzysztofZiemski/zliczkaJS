@@ -15,7 +15,7 @@ export const TYPE_FIELD_REPORT = {
   COUNT: "COUNT",
 };
 
-interface TaskReportInterface {
+export interface TaskReportInterface {
   taskId: string;
   name: string;
   parametrized: boolean;
@@ -31,6 +31,7 @@ export interface ReportInterface {
   date: string;
   tasks: Array<TaskReportInterface>;
   confirmed: boolean;
+  updated;
 }
 
 let report: ReportInterface;

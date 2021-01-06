@@ -70,6 +70,15 @@ export class AdminReportTable {
   }
   renderSumRow(values: Array<string>) {
     const tr = document.createElement("tr");
+    //first element
+    const td = document.createElement("td");
+    td.innerText = "SUMA";
+    td.setAttribute(
+      "class",
+      "px-6 py-4 whitespace-no-wrap border text-white border-gray-500 text-sm leading-5 bg-black"
+    );
+    tr.append(td);
+
     values.forEach((header) => {
       const td = document.createElement("td");
       td.innerText = header;

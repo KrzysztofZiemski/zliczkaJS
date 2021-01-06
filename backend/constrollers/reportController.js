@@ -26,14 +26,14 @@ class ReportController {
             throw error;
         }
     }
-    getRequiredData(responseFronDB) {
-        const clearedData = responseFronDB.map(el => {
-            const { _id, tasks, confirmed, userId, date, description, ...other } = el
-            return { id: _id, tasks, confirmed, userId, date, description }
+    getRequiredData(responseFromDB) {
+        const clearedData = responseFromDB.map(el => {
+            const { _id, tasks, confirmed, userId, date, description, updated, ...other } = el
+            return { id: _id, tasks, confirmed, userId, date, description, updated }
         })
         clearedData.forEach(element => {
             element.tasks = element.tasks.map(task => {
-                const { taskId, name, count, time, intensityTime, parametrized, ...other } = task
+                const { taskId, name, count, time, intensityTime, parametrized, updated, ...other } = task
                 return { taskId, name, count, time, intensityTime, parametrized }
             })
         });

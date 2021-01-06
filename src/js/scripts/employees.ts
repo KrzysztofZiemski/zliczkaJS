@@ -51,6 +51,16 @@ export class EmployeesApi {
       //TODO handle error
     }
   }
+  async get(id: string) {
+    try {
+      const response = await fetch(`${this.url}/${id}`);
+      if (response.ok) {
+        return response.json();
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
   async getSelf() {
     try {
       const response = await fetch(`${this.url}/self`);

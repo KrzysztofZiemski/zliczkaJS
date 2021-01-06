@@ -1,11 +1,24 @@
-import { Reports } from "./scripts/reports";
+import {
+  Reports,
+  ReportInterface,
+  TaskReportInterface,
+} from "./scripts/reports";
 import { getStringData } from "./scripts/helpers";
 import { Loader } from "./scripts/loader";
 import { Message } from "./scripts/message";
-import { ReportInterface } from "./scripts/reports";
 import { AdminReportTable } from "./scripts/adminReportTable";
 import { EmployeesApi, GettingEmployee } from "./scripts/employees";
 import { UserPanel } from "./scripts/userPanel";
+
+interface TaskReportPlusDateInterface {
+  taskId: string;
+  name: string;
+  parametrized: boolean;
+  count: number;
+  time?: number;
+  intensityTime?: number;
+  date: string;
+}
 
 export class AdminReport {
   report: Reports;
@@ -20,6 +33,16 @@ export class AdminReport {
     this.addEmployessList();
     this.setUserPanel();
   }
+
+  async setUserPanel() {
+    try {
+      const { name, lastName } = await new EmployeesApi().getSelf();
+      new UserPanel(`${name} ${lastName}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async addEmployessList() {
     const employesApi = new EmployeesApi();
     await employesApi.fetchAll();
@@ -37,10 +60,14 @@ export class AdminReport {
       select.append(option);
     });
   }
+  getDateText(date: string): string {
+    return date.slice(0, 10).replace(/-/g, "/");
+  }
 
   setMessage() {
     const message = new Message();
   }
+
   addListeners() {
     document
       .querySelector("#admin-report-panel-btn")
@@ -59,6 +86,7 @@ export class AdminReport {
     startInput.value = getStringData(startMonthDate, true);
     endInput.value = getStringData(date, true);
   }
+
   async handleGetNewReports() {
     const startInput: HTMLInputElement = document.querySelector(
       "#date-panel-start"
@@ -75,15 +103,16 @@ export class AdminReport {
       employeeSelect.value
     );
 
-    if (reports) this.renderReportsTable(reports);
+    if (reports) {
+      this.renderReportsTable(reports);
+      this.renderReportsList(reports);
+    }
   }
 
   async getReport(start: string, end: string, id: string) {
     const loader = new Loader();
     loader.setShow();
     try {
-      ////////fetchByEmployee(dateStart: string, dateEnd: string, id: string)
-
       const reports: Array<ReportInterface> =
         id !== "all"
           ? await this.report.fetchByEmployee(start, end, id)
@@ -96,123 +125,201 @@ export class AdminReport {
       message.set("Błąd podczas pobierania raportów", err);
     }
   }
-  async setUserPanel() {
-    try {
-      const { name, lastName } = await new EmployeesApi().getSelf();
-      new UserPanel(`${name} ${lastName}`);
-    } catch (err) {
-      console.log(err);
+
+  async renderReportsList(reports: Array<ReportInterface>) {
+    const listElement: HTMLUListElement = document.querySelector(
+      "#container__list"
+    );
+    if (listElement) listElement.innerHTML = "";
+
+    if (reports.length === 0) return;
+    const employesApi = new EmployeesApi();
+    let employees: Array<GettingEmployee> = employesApi.getAll();
+    if (employees.length === 0) {
+      await employesApi.fetchAll();
+      employees = employesApi.getAll();
     }
+
+    let copyReports = reports.map(async ({ userId, ...report }) => {
+      const user: GettingEmployee = employees.find(
+        (employee) => employee.id === userId
+      );
+      if (user) {
+        return {
+          ...report,
+          userId,
+          name: user.name,
+          lastName: user.lastName,
+        };
+      }
+      const [userFetch]: Array<GettingEmployee> = await employesApi.get(userId);
+
+      return {
+        ...report,
+        userId,
+        name: userFetch.name,
+        lastName: userFetch.lastName,
+      };
+    });
+    const afterUserFetchReport: Array<any> = await Promise.all(copyReports);
+
+    afterUserFetchReport.sort((a, b) => {
+      const bDate = new Date(b.date).getTime;
+      const aDate = new Date(a.date).getTime;
+      if (aDate <= bDate) return -1;
+      if (aDate > bDate) return 1;
+      if (a.lastName > b.lastName) return 1;
+      if (a.lastName < b.lastName) return 1;
+      return 0;
+    });
+
+    const h2 = document.createElement("h2");
+    h2.innerText = "LISTA RAPORTÓW";
+    h2.setAttribute("class", "text-center text-lg p-3 bg-blue-900 text-white");
+    listElement.append(h2);
+
+    afterUserFetchReport.forEach(({ date, name, lastName, updated }) => {
+      const li = document.createElement("li");
+
+      const modified = this.getDateText(updated) !== this.getDateText(date);
+
+      li.innerText = `${this.getDateText(date)} - ${name} ${lastName}${
+        modified ? ` - zmodyfikowane dnia ${this.getDateText(updated)}` : ""
+      }`;
+      li.setAttribute(
+        "class",
+        `border list-none  rounded-sm px-3 py-3 ${
+          modified ? "bg-yellow-300" : ""
+        }`
+      );
+      listElement.append(li);
+    });
   }
+
   renderReportsTable(reports: Array<ReportInterface>) {
+    //if empty list
     if (reports.length === 0) {
       const tablePanel = new AdminReportTable(
-        document.querySelector("#container")
+        document.querySelector("#container__table")
       );
       tablePanel.renderRow(["brak raportów"]);
       return;
     }
-    const dateText = (date: string) => date.slice(0, 10).replace(/-/g, "/");
-    //for headers
-    const tableDates = {};
 
-    //for bodyTable
-    const tableNamesTasks = {};
+    //creating new tablePanel - clearing html
+    const tablePanel = new AdminReportTable(
+      document.querySelector("#container__table")
+    );
 
-    reports.forEach(({ date, tasks, userId }) => {
-      const dateString = dateText(date);
-      tableDates[dateString] = tableDates[dateString]
-        ? tableDates[dateString] + 1
-        : 1;
+    //declare objects
 
-      tasks.forEach(({ name, count, time, intensityTime }) => {
-        if (tableNamesTasks[name]) {
-          tableNamesTasks[name].push({ date, count, time, intensityTime });
+    const reportsByDate = {};
+    const tasksByName = {};
+
+    reports.forEach((report: ReportInterface) => {
+      const dateText = this.getDateText(report.date);
+
+      //for reportsByDate
+      if (reportsByDate[dateText]) {
+        reportsByDate[dateText].push({ ...report, date: dateText });
+      } else {
+        const newReport: ReportInterface = { ...report, date: dateText };
+        reportsByDate[dateText] = [newReport];
+      }
+
+      //for tasksByName
+      report.tasks.forEach((task: TaskReportInterface) => {
+        const taskPlusDate: TaskReportPlusDateInterface = {
+          ...task,
+          date: dateText,
+        };
+
+        if (tasksByName[task.name]) {
+          tasksByName[task.name].push(taskPlusDate);
         } else {
-          tableNamesTasks[name] = [{ date, count, time, intensityTime }];
+          tasksByName[task.name] = [taskPlusDate];
         }
       });
     });
 
-    //headers
-
+    //declare rows for Render
     const headers = [];
-    for (let date in tableDates) {
-      headers.push(dateText(date));
+    const summaryRow = [];
+    const effectiveRow = [];
+    const rows = [];
+    //creating headers Array
+
+    for (let date in reportsByDate) {
+      headers.push(date);
     }
     headers.sort((a, b) => {
-      const aDate = new Date(a).getTime;
-      const bDate = new Date(b).getTime;
-      if (a <= b) return -1;
-      if (a > b) return 1;
+      const aDate = new Date(a).getTime();
+      const bDate = new Date(b).getTime();
+      if (aDate <= bDate) return -1;
+      if (aDate > bDate) return 1;
       return 0;
     });
 
-    //body
-    const rows = [];
-    const sumRow = ["SUMA"];
+    //creating effective and summary Arrays
 
-    for (let name in tableNamesTasks) {
-      const row = [name];
+    headers.forEach((date) => {
+      //calculations
+      const numberReports: number = reportsByDate[date].length;
+      const valueTargetTimeForPerson: number = 415;
+      const targetTime: number = numberReports * valueTargetTimeForPerson;
+      let countTasks: number = 0;
+      let timeTasks: number = 0;
 
-      // time and count data for each header
-      for (let i = 1; i < headers.length * 2 + 1; i++) {
-        row[i] = "";
-      }
-
-      tableNamesTasks[name].forEach(({ count, date, intensityTime, time }) => {
-        const index = headers.findIndex(
-          (headerDate) => headerDate === dateText(date)
-        );
-
-        //calcule position for data(2 datas for one header date and first position is task name)
-        const useIndex = index * 2 + 1;
-
-        row[useIndex] = row[useIndex]
-          ? String(Number(row[useIndex]) + count)
-          : String(count);
-        const usedTime = intensityTime || time;
-        const addingValue = Number(usedTime) * count;
-
-        row[useIndex + 1] = row[useIndex + 1]
-          ? String(Number(row[useIndex + 1]) + addingValue)
-          : String(addingValue);
-
-        //calculation for last row summary
-
-        const newValueCount: string = sumRow[useIndex]
-          ? Number(sumRow[useIndex]) + count
-          : count;
-        sumRow[useIndex] = String(newValueCount);
-
-        const newValueTime: string = sumRow[useIndex + 1]
-          ? String(Number(sumRow[useIndex + 1]) + addingValue)
-          : String(addingValue);
-
-        sumRow[useIndex + 1] = newValueTime;
+      const reportsInDate = reportsByDate[date];
+      reportsInDate.forEach((report: ReportInterface) => {
+        report.tasks.forEach(({ count, time, intensityTime }) => {
+          countTasks += count;
+          timeTasks += (time || intensityTime || 0) * count;
+          if (time === null && intensityTime === undefined) {
+          }
+        });
       });
-      rows.push(row);
-    }
 
-    const tablePanel = new AdminReportTable(
-      document.querySelector("#container")
-    );
+      //summary
+      summaryRow.push(countTasks, timeTasks);
+      //effective
+
+      const effective = Math.round((timeTasks / targetTime) * 100 || 0);
+
+      effectiveRow.push(effective);
+    });
+
+    //creating rows
+
+    const lengthRows = headers.length * 2;
+
+    for (let nameTask in tasksByName) {
+      const row: Array<number> = [];
+      for (let i = 0; i < lengthRows; i++) {
+        row[i] = 0;
+      }
+      tasksByName[nameTask].forEach((task: TaskReportPlusDateInterface) => {
+        const index = headers.findIndex((header) => header === task.date);
+        const useIndex = index * 2;
+        row[useIndex] += task.count;
+        row[useIndex + 1] +=
+          (task.time || task.intensityTime || 0) * task.count;
+      });
+      const convertToStringArray = row.map((el) => {
+        if (el === 0) return " ";
+        return String(el);
+      });
+      const renderRow = [nameTask, ...convertToStringArray];
+      rows.push(renderRow);
+    }
+    //tasksByName
+
+    //renders
 
     tablePanel.renderHeaders(headers);
-
     rows.forEach((row) => tablePanel.renderRow(row));
 
-    const effectiveRow = [];
-    const valueTargetTimeForPerson = 415;
-
-    for (let i = 2; i < sumRow.length; i = i + 2) {
-      const date = headers[i / 2 - 1 || 0];
-      const count = tableDates[date];
-      const max = valueTargetTimeForPerson * count;
-      effectiveRow.push(Math.round((Number(sumRow[i]) / max) * 100));
-    }
-    tablePanel.renderSumRow(sumRow);
-
+    tablePanel.renderSumRow(summaryRow);
     tablePanel.renderPercent(effectiveRow);
   }
 }

@@ -40,56 +40,59 @@
           </svg>
         </div>
       </nav>
-      <main class="flex flex-grow">
-        <div class="w-full flex-grow" id="container"></div>
-        <div class="min-w-min bg-blue-500">
-          <label
-            for="date-panel-start"
-            class="px-5 py-2 rounded-t-lg uppercase spacing-5 font-bold block"
-          >
-            <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
-              >początek</span
+      <main class="flex flex-grow flex-col">
+        <div class="flex flex-grow">
+          <div id="container__table" class="w-full flex-grow"></div>
+          <div class="min-w-min bg-blue-500">
+            <label
+              for="date-panel-start"
+              class="px-5 py-2 rounded-t-lg uppercase spacing-5 font-bold block"
             >
-            <input
-              type="date"
-              id="date-panel-start"
-              class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </label>
-          <label
-            for="date-panel-end"
-            class="px-5 py-2 rounded-t-lg uppercase spacing-5 font-bold block"
-          >
-            <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
-              >koniec</span
+              <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
+                >początek</span
+              >
+              <input
+                type="date"
+                id="date-panel-start"
+                class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </label>
+            <label
+              for="date-panel-end"
+              class="px-5 py-2 rounded-t-lg uppercase spacing-5 font-bold block"
             >
-            <input
-              type="date"
-              id="date-panel-end"
-              class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </label>
+              <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
+                >koniec</span
+              >
+              <input
+                type="date"
+                id="date-panel-end"
+                class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </label>
 
-          <label
-            class="p-5 py-9 block rounded-t-lg uppercase spacing-5 font-bold"
-            for="employeeList-select"
-          >
-            <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
-              >Wybierz pracowników</span
+            <label
+              class="p-5 py-9 block rounded-t-lg uppercase spacing-5 font-bold"
+              for="employeeList-select"
             >
-            <select
-              class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="employeeList-select"
-              name="employeeList-select"
-              placeholder="raport dla"
-            >
-              <option value="all" selected>WSZYSCY</option>
-            </select>
-            <button class="primmary-btn mt-10" id="admin-report-panel-btn">
-              pobierz
-            </button>
-          </label>
+              <span class="block mb-2 max-w-2xl px-3 whitespace-nowrap"
+                >Wybierz pracowników</span
+              >
+              <select
+                class="w-full shadow appearance-none border rounded max-w-2xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="employeeList-select"
+                name="employeeList-select"
+                placeholder="raport dla"
+              >
+                <option value="all" selected>WSZYSCY</option>
+              </select>
+              <button class="primmary-btn mt-10" id="admin-report-panel-btn">
+                pobierz
+              </button>
+            </label>
+          </div>
         </div>
+        <ul id="container__list" class="list-none"></ul>
       </main>
     </div>
     <div
