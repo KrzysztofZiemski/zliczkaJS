@@ -19,3 +19,8 @@ npm start
 ## live
 
 https://zliczka.herokuapp.com/
+
+## logowanie:
+
+Login: uzytkownik
+Hasło: uzytkownik
